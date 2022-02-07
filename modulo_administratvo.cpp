@@ -46,7 +46,7 @@ struct Turnos{
 	fecha Fech;
 	int DniCliente;
 	char DetalledeAtencion[380];
-	
+	bool borrado;
 };
 
 //Variables Globales.
@@ -67,6 +67,7 @@ void registProfesional();
 void regUsuarioRecepcionista();
 void atencionProfesional();
 void rankingProfesionales();
+int meses();
 
 main(){
 
@@ -145,11 +146,13 @@ void registProfesional(){
 	
 	system("cls");
 	system("color f0");
-	int contDigitos=0, contMayus=0;	
-    int contMinusc=0, contMayusc=0, contNumeros=0;
+    
     bool esta=false;
 	bool esta2=false;
-    int continuar= 0, longitud, longitud2, i=0, j=1;
+	int contDigitos=0, contMayus=0, cont=0;
+	int contMinusc=0, contMayusc=0, contNumeros=0, contNumCons=0, contAlfabCons=0;
+    int continuar= 0, longitud, longitud2, j=1;
+    char aux[10];
     
 
     FILE *RP = fopen("Profesionales.dat", "a+b");
@@ -165,7 +168,7 @@ void registProfesional(){
     printf("\n\n\t\tINGRESE LOS DATOS PERSONALES DEL PROFESIONAL: ");
     printf("\n\t\t--------------------------------------------");
 
-    do{
+    //do{
         printf("\n\nINGRESE NOMBRE Y APELLIDO DEL PROFESIONAL: ");
         _flushall();
 		gets(profe.ApellidoyNombre);
@@ -179,16 +182,20 @@ void registProfesional(){
         printf("\nINGRESE EL NUMERO DE TELEFENO: ");
         scanf("%d", &profe.Telefono);
         
+        
         system("cls");
         
         printf("\n\t\tINGRESE USUARIO Y CONTRASENA PARA SU NUEVA CREDENCIAL:");
         printf("\n\t\t------------------------------------------------------");
         
-        printf("\n\nINGRESE NOMBRE DE USUARIO: (minimo 6 caracteres y maximo 10 caracteres, la primera letra minuscula, al menos dos letras mayusculas y tres numeros como maximo): ");
+        printf("\n\nINGRESE NOMBRE DE USUARIO (minimo 6 caracteres y maximo 10 caracteres, la primera letra minuscula,");
+		printf("\n                              al menos dos letras mayusculas y tres numeros como maximo)");
         
+        printf("\n -> ");
        
        	do{
-	
+			contDigitos=0, contMayus=0, cont=0;
+				
 			_flushall();
 			gets(usi.usuario);
 			
@@ -197,27 +204,33 @@ void registProfesional(){
 			if(longitud>=6 && longitud<=10){
 			
 				for(int i=0; i<longitud; i++){
-					//printf("%c  - %d\n", cadFrase[i], cadFrase[i]);
 					
-					if(usi.usuario[0]>=97  && usi.usuario[0]<=122){		//Codigo ASCII de letras en minuscula
-			
+					if(i==0){
+						
+						if(usi.usuario[i]>=97  && usi.usuario[i]<=122){		//Codigo ASCII de letras en minuscula
+							cont++;
+						}
+					}else{
+						
 						if(usi.usuario[i]>=65 && usi.usuario[i]<=90){    //Codigo ASCII de letras en mayuscula
-							contMayus++;	
-									
-				       	}
+							contMayus++;					
+					    }
+					    
+					    if(usi.usuario[i]>=33 && usi.usuario[i]<=57){
+							contDigitos = contDigitos + 1;	
+				        }
 					}
-					
 				}
 				
-				for(int i=0; i<longitud; i++){
+				/*for(int d=0; d<longitud; d++){
 					//if(contMayus >= 2){
-				    	if(usi.usuario[i]>=33 && usi.usuario[i]<=57){
+				    	if(usi.usuario[d]>=33 && usi.usuario[d]<=57){
 							contDigitos = contDigitos + 1;	
 				        }	
 					//}
-				}
+				}*/
 				
-				if(contDigitos < 4 && contMayus >= 2){
+				if(contDigitos < 4 && contMayus >= 2 && cont==1){
 					esta = true;
 				}else{
 					printf("\n VUELVA A INGRESAR OTRO NOMBRE DE USUARIO: ");
@@ -225,22 +238,34 @@ void registProfesional(){
 				
 			}else{
 				printf("\n NOMBRE DE USUARIO MUY CORTO - LARGO");
+				printf("\n  INGRESE OTRO NOMBRE DE USUARIO: ");
 			}
 			
 		}while(esta == false);
 	
 		if(esta==true){
-			printf("\nSU USUARIO SE CREO CON EXITO...!");
+			printf("\n\t\t\t\t ========================================");
+			printf("\n\t\t\t\t |   SU USUARIO SE CREO CON EXITO...!   |");
+			printf("\n\t\t\t\t ========================================");
 		}
 	
 	 // =========================
 	
 	
-        printf("\n\nINGRESE CONTRASENA (debe tener entre 6 y 32 cacteres, al menos una letra mayuscula, una letra minuscula, un numero, no podra contener nigun caracter de puntuacion, ni acentos, ni espacios, no debera tener mas de 3 caracteres numericos consecutivos, ni debe tener dos caracteres consecutivos que refieran a letras alfabeticamente consecutivas ascendentemente.): ");
+        printf("\n\nINGRESE CONTRASENA (debe tener entre 6 y 32 cacteres, al menos una letra mayuscula, una letra minuscula, un numero,");
+		printf("\n                     no podra contener nigun caracter de puntuacion, ni acentos, ni espacios, no debera tener mas de 3 ");
+		printf("\n                     caracteres numericos consecutivos, ni debe tener 2 caracteres consecutivos que refieran a letras ");
+		printf("                                         alfabeticamente consecutivas ascendentemente.)");
 	    
+	    printf("\n -> ");
 	    do{
+	    	contMinusc=0, contMayusc=0, contNumeros=0, contNumCons=0, contAlfabCons=0, j=1; 
+	    	
 	    	_flushall();
 		    gets(usi.contrasena);
+		    
+		    strcpy(aux, usi.contrasena);
+		    strlwr(aux);
 	        
 	        longitud2 = strlen(usi.contrasena);
         
@@ -251,39 +276,55 @@ void registProfesional(){
 					
 					if(usi.contrasena[k]>=97  && usi.contrasena[k]<=122){		//Codigo ASCII de letras en minuscula
 						contMinusc++;
+						
+							if(aux[k] == aux[k+1] - 1){
+								contAlfabCons++; // contador de caracteres consecutivos de letras alfabéticamente 
+							}
 					}
+					
 					if(usi.contrasena[k]>=65 && usi.contrasena[k]<=90){    //Codigo ASCII de letras en mayuscula
 						contMayusc++;		
 				    }
+				    
 				    if(usi.contrasena[k]>=48 && usi.contrasena[k]<=57){
 						contNumeros++;
+						
+							if(usi.contrasena[k] == usi.contrasena[k+1] - 1){
+								contNumCons++; // contador de Numeros consecutivos
+							}
 					}
+					
 					if(usi.contrasena[k]!=32 && usi.contrasena[k]!=44 && usi.contrasena[k]!=46 && usi.contrasena[k]!=96 && usi.contrasena[k]!=59 && usi.contrasena[k]!=58){
 						j = 0;
 					}
 					
 				}
 			
-				if(contMinusc >=1 && contMayusc >= 1 && contNumeros >= 1 && j == 0){
+				if(contMinusc >=1 && contMayusc >= 1 && contNumeros >= 1 && j == 0 && contNumCons <= 2 && contAlfabCons == 0){
 					esta2 = true;
 				}else{
 					printf("\n ERROR EN LA CONFORMACION DE LA CONTRASENA, NO CUMPLE CON LAS CONDICONES ESTABLECIDAS.");
-					printf("\n INGRESE OTRA CONTRASENA: ");
+					printf("\n  INGRESE OTRA CONTRASENA: ");
 				}
 					
 			}else{
-				printf("\n CONTRASENA MUY CORTO - LARGO\n");
-				printf("\n INGRESE OTRA CONTRASENA: ");
+				printf("\n CONTRASENA MUY CORTO - LARGO");
+				printf("\n  INGRESE OTRA CONTRASENA: ");
 			}
         
    		}while(esta2 == false);
    		
    		if(esta2==true){
-			printf("\nSU CONTRASEÑA SE CREO CON EXITO...!");
+   			printf("\n\t\t\t\t ========================================");
+			printf("\n\t\t\t\t | SU CONTRASENA SE CREO CON EXITO...!  |");
+			printf("\n\t\t\t\t ========================================");
 		}
-    	fseek(RP, 0, SEEK_END);
+		
+    	
     	fwrite(&profe,sizeof(Profesionales),1,RP);
         fwrite(&usi,sizeof(Usuarios),1,RP);
+        
+        fseek(RP, 2, SEEK_END);
         
         printf("\n");
         //system("pause");
@@ -291,13 +332,13 @@ void registProfesional(){
 
 
 
-        printf("\nDESEA CONTINUAR INGRESANDO PROFESIONALES...?\n\nPRESIONE 1 PARA SI Y 0 PARA NO: ");
-		scanf("%d", &continuar);
+        //printf("\nDESEA CONTINUAR INGRESANDO PROFESIONALES...?\n\nPRESIONE 1 PARA SI Y 0 PARA NO: ");
+		//scanf("%d", &continuar);
 
         system("pause");
         system("cls");
 
-    }while(continuar == 1);
+    //}while(continuar == 1);
 	
 	
     
@@ -311,12 +352,7 @@ void regUsuarioRecepcionista(){
 	system("cls");
 	system("color 6c");
 	
-	int contDigitos=0, contMayus=0;	
-    int contMinusc=0, contMayusc=0, contNumeros=0;
-    bool esta=false;
-	bool esta2=false;
-    int continuar= 0, longitud, longitud2, i=0, j=1;
-    
+	int continuar= 0;
 	
 	RL= fopen("Recepcionistas.dat", "ab");
 
@@ -331,129 +367,31 @@ void regUsuarioRecepcionista(){
 	printf("\n*\t----------            *");
 	printf("\n*******************************");
 	
-	 do{
-        printf("\n\nINGRESE NOMBRE Y APELLIDO: ");
+	do{
+		printf("\n\nINGRESE NOMBRE Y APELLIDO: ");
 		_flushall();
 		gets(usi.ApeyNom);
-        
-        system("cls");
-        
-        printf("\n\t\tINGRESE USUARIO Y CONTRASENA PARA SU NUEVA CREDENCIAL:");
-        printf("\n\t\t------------------------------------------------------");
-        
-        printf("\n\nINGRESE NOMBRE DE USUARIO: (minimo 6 caracteres y maximo 10 caracteres, la primera letra minuscula, al menos dos letras mayusculas y tres numeros como maximo): ");
-        
-       
-       	do{
-	
-			_flushall();
-			gets(usi.usuario);
-			
-			longitud = strlen(usi.usuario);
-			
-			if(longitud>=6 && longitud<=10){
-			
-				for(int i=0; i<longitud; i++){
-					//printf("%c  - %d\n", cadFrase[i], cadFrase[i]);
-					
-					if(usi.usuario[0]>=97  && usi.usuario[0]<=122){		//Codigo ASCII de letras en minuscula
-			
-						if(usi.usuario[i]>=65 && usi.usuario[i]<=90){    //Codigo ASCII de letras en mayuscula
-							contMayus++;	
-									
-				       	}
-					}
-					
-				}
-				
-				for(int i=0; i<longitud; i++){
-					//if(contMayus >= 2){
-				    	if(usi.usuario[i]>=33 && usi.usuario[i]<=57){
-							contDigitos = contDigitos + 1;	
-				        }	
-					//}
-				}
-				
-				if(contDigitos < 4 && contMayus >= 2){
-					esta = true;
-				}else{
-					printf("\n VUELVA A INGRESAR OTRO NOMBRE DE USUARIO: ");
-				}
-				
-			}else{
-				printf("\n NOMBRE DE USUARIO MUY CORTO - LARGO");
-			}
-			
-		}while(esta == false);
-	
-		if(esta==true){
-			printf("\nSU USUARIO SE CREO CON EXITO...!");
-		}
-	
-	 // =========================
-	
-	
-        printf("\n\nINGRESE CONTRASENA (debe tener entre 6 y 32 cacteres, al menos una letra mayuscula, una letra minuscula, un numero, no podra contener nigun caracter de puntuacion, ni acentos, ni espacios, no debera tener mas de 3 caracteres numericos consecutivos, ni debe tener dos caracteres consecutivos que refieran a letras alfabeticamente consecutivas ascendentemente.): ");
-	    
-	    do{
-	    	_flushall();
-		    gets(usi.contrasena);
-	        
-	        longitud2 = strlen(usi.contrasena);
-        
-        	if(longitud2>=6 && longitud2<=32){
 		
-				for(int k=0; k<longitud2; k++){
-					//printf("%c  - %d\n", cadFrase[i], cadFrase[i]);
-					
-					if(usi.contrasena[k]>=97  && usi.contrasena[k]<=122){		//Codigo ASCII de letras en minuscula
-						contMinusc++;
-					}
-					if(usi.contrasena[k]>=65 && usi.contrasena[k]<=90){    //Codigo ASCII de letras en mayuscula
-						contMayusc++;		
-				    }
-				    if(usi.contrasena[k]>=48 && usi.contrasena[k]<=57){
-						contNumeros++;
-					}
-					if(usi.contrasena[k]!=32 && usi.contrasena[k]!=44 && usi.contrasena[k]!=46 && usi.contrasena[k]!=96 && usi.contrasena[k]!=59 && usi.contrasena[k]!=58){
-						j = 0;
-					}
-					
-				}
-			
-				if(contMinusc >=1 && contMayusc >= 1 && contNumeros >= 1 && j == 0){
-					esta2 = true;
-				}else{
-					printf("\n ERROR EN LA CONFORMACION DE LA CONTRASENA, NO CUMPLE CON LAS CONDICONES ESTABLECIDAS.");
-					printf("\n INGRESE OTRA CONTRASENA: ");
-				}
-					
-			}else{
-				printf("\n CONTRASENA MUY CORTO - LARGO\n");
-				printf("\n INGRESE OTRA CONTRASENA: ");
-			}
+		printf("\n\nINGRESE NOMBRE DE USUARIO: ");
+		gets(usi.usuario);
+		
+		printf("\n\nINGRESE CONTRASENA: ");
+		gets(usi.contrasena);
+		
+		fwrite(&usi,sizeof(Usuarios),1,RL);
+		
+		printf("\n");
         
-   		}while(esta2 == false);
-   		
-   		if(esta2==true){
-			printf("\nSU CONTRASEÑA SE CREO CON EXITO...!");
-		}
-    	fseek(RL, 0, SEEK_END);
-    	fwrite(&usi,sizeof(Usuarios),1,RL);
-        
-        printf("\n");
-        //system("pause");
-        //system("cls");
-
-
-
-        printf("\nDESEA CONTINUAR INGRESANDO PROFESIONALES...?\n\nPRESIONE 1 PARA SI Y 0 PARA NO: ");
-		scanf("%d", &continuar);
-
         system("pause");
         system("cls");
 
-    }while(continuar == 1);
+        printf("\nDESEA CONTINUAR INGRESANDO RECEPCIONISTAS...?\n\nPRESIONE 1 PARA SI Y 0 PARA NO: ");
+		scanf("%d", &continuar);
+
+        system("pause");
+		system("cls");
+
+	}while(continuar==1);
 	
 	fclose(RL);
 	
@@ -463,30 +401,55 @@ void regUsuarioRecepcionista(){
 void atencionProfesional(){
 	
 	system("cls");
-	system("color 46");
+	system("color f0");
 	
-	int contarAtenciones=0;
+	int contarAtenciones=0, mesActual, idProfesional=0;
+	char apeynom[60];
 	
 	TR= fopen("Turnos.dat", "rb");
-	RP= fopen("Profesionales.dat", "rb");
+	RP= fopen("Profesionales.dat", "r+b");
+	
+	printf("\n   = INGRESE MES ACTUAL PARA MOSTRAR NRO. ATENCIONES = \n ");
+	mesActual = meses();
+	system("cls");
+	printf("\n INGRESE EL ID DEL PROFESIONAL: ");
+	scanf("%d", &idProfesional);
+	
+	printf("\n\n");
+	system("pause");
+	system("cls");
+	
 	
 	rewind(TR);
 	rewind(RP);
 	
-	fread(&tu, sizeof(Turnos), 1, TR);
-	fread(&profe, sizeof(Profesionales), 1, RP);
+	fread(&tu, sizeof(tu), 1, TR);
+	//fread(&profe, sizeof(profe), 1, RP);
 	
-	while(!feof(TR) && !feof(RP)){
+	while(!feof(TR)){
 		
-		if(tu.Fech.D >= 1 && tu.Fech.D <=31)
+		if(tu.Fech.M == mesActual && tu.borrado == true && tu.IdProfesional == idProfesional){
 		
-			contarAtenciones= tu.Fech.D + 1;
-		
-		printf("\nEL PROFESIONAL %s TUVO %d ATENCIONES EN EL MES ACTUAL", profe.ApellidoyNombre, contarAtenciones);
+			contarAtenciones++;
+		}
 			
-		fread(&tu, sizeof(Turnos), 1, TR);
-		fread(&profe, sizeof(Profesionales), 1, RP);
+		fread(&tu, sizeof(tu), 1, TR);
+		//fread(&profe, sizeof(profe), 1, RP);
 	}
+	
+	/*fread(&profe, sizeof(profe), 1, RP);
+	while(!feof(RP)){
+		
+		if(profe.IdProfesional == idProfesional){
+			printf("PROFESIONAL = %s", profe.ApellidoyNombre);
+		}
+			
+		fread(&profe, sizeof(profe), 1, RP);
+	}*/
+	
+
+	printf("\nEL PROFESIONAL TUVO %d ATENCIONES EN EL MES ACTUAL\n\n",contarAtenciones);
+
 	
 	fclose(TR);
 	fclose(RP);
@@ -545,4 +508,25 @@ void rankingProfesionales(){
 	fclose(RP);
 	
 	getch();
+}
+
+int meses(){
+	int opci=0;
+	
+	printf("\n   1) Enero");
+	printf("\n   2) Febrero");
+	printf("\n   3) Marzo");
+	printf("\n   4) Abril");
+	printf("\n   5) Mayo");
+	printf("\n   6) Junio");
+	printf("\n   7) Julio");
+	printf("\n   8) Agosto");
+	printf("\n   9) Septiembre");
+	printf("\n   10) Octubre");
+	printf("\n   11) Noviembre");
+	printf("\n   12) Diciembre");
+	printf("\n RESPUESTA: ");
+	scanf("%d", &opci);
+	
+	return opci;
 }
