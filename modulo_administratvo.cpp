@@ -416,8 +416,6 @@ void atencionProfesional(){
 	scanf("%d", &idProfesional);
 	
 	printf("\n\n");
-	system("pause");
-	system("cls");
 	
 	
 	rewind(TR);
@@ -447,9 +445,9 @@ void atencionProfesional(){
 		fread(&profe, sizeof(profe), 1, RP);
 	}*/
 	
-
-	printf("\nEL PROFESIONAL TUVO %d ATENCIONES EN EL MES ACTUAL\n\n",contarAtenciones);
-
+	printf("\n\t\t ------------------------------------------------------------------");
+	printf("\n\t\t |       EL PROFESIONAL TUVO %d ATENCIONES EN EL MES ACTUAL       |",contarAtenciones);
+	printf("\n\t\t ------------------------------------------------------------------");
 	
 	fclose(TR);
 	fclose(RP);
