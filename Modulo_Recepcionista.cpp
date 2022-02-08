@@ -63,7 +63,7 @@ struct Turnos{
 
 //PROTOTIPOS.
 
-void iniciar();
+int iniciar(int b);
 void regiCli();
 void regiTur();
 void listar();
@@ -87,7 +87,7 @@ main(){
 	
 	system("color f0");
 
-    int opc;
+    int opc, l;
 
     printf("**********************************************************************");
     printf("\n*\tBienvenido al Sistema del Centro de Estetica Misa            *");
@@ -114,7 +114,7 @@ main(){
 		switch(opc){
 
 			case 1:
-	            iniciar();	
+	            iniciar(l);	
 				system("PAUSE");
 				break;
 
@@ -154,13 +154,14 @@ main(){
 	getch();	
 }
 /*-------------------------------------------------------------------------------*/
-void iniciar(){
+int iniciar(int b){
 	
 	system("cls");
 	system("color f0");
 	
 	char name[10], pass[10];
 	int longitud, longitud1, Pal, Pol;
+	b=0;
 	
 	printf("+++++++++++++++++++++++++++++++++++++++++++++++++++");
 	printf("\n+\t\tINICIE SESION:                    +");
@@ -175,7 +176,7 @@ void iniciar(){
 	_flushall();
 	gets(pass);
 	
-	RL= fopen("Recepcionistas.dat", "rb");
+	RL= fopen("Recepcionistas.dat", "a+b");
 
     if(RL == NULL){
 		printf("\n\t\t***********Error*********** \n");
@@ -185,27 +186,16 @@ void iniciar(){
 	rewind(RL);
 	
 	fread(&usi,sizeof(Usuarios),1,RL);
-	//fread(&pass,sizeof(Usuarios),1,RL);
 	
-	Pal=strcmp(name,usi.usuario);
-	Pol=strcmp(pass,usi.contrasena);
-	
-	longitud= strlen(name);
-	longitud1= strlen(pass); 
 	
  	while(!feof(RL)){
+ 		Pal=strcmp(name,usi.usuario);
+		Pol=strcmp(pass,usi.contrasena);
  		
 		if( (Pal==0) && (Pol==0) ){
 			
 			printf("\nACCESO EXITOSO...!");
-			
-		}else{
-			
-			printf("\n\t\t*********ERROR*********");
-			printf("\nEL USUARIO Y/O LA CONTRASENA ES INCORRECTA\n");
-			system("pause");
-			system("cls");
-			printf("\nINICIE NUVAMENTE LA SESION...! ");
+			b=1;
 		}
 			
  		fread(&usi,sizeof(Usuarios),1,RL);
@@ -213,8 +203,16 @@ void iniciar(){
  	}
  	
  	fclose(RL);
-
-	getch();	
+ 	
+	if(b==0){
+		printf("\n\t\t*********ERROR*********");
+		printf("\nEL USUARIO Y/O LA CONTRASENA ES INCORRECTA\n");
+		system("pause");
+		system("cls");
+		printf("\nINICIE NUVAMENTE LA SESION...! ");
+	}
+	getch();
+	return b;	
 }
 /*---------------------------------------------------------------------------*/
 void regiCli(){
@@ -249,14 +247,14 @@ void regiCli(){
         gets(cli.localidad);
         
         printf("\n INGRESE FECHA DE NACIMIENTO: ");
-		printf("\n\tDia: ");
+		printf("\n\t Dia: ");
 		scanf("%d", &cli.fechadeNacimiento.dia);
 		printf("\t Mes: ");
 		scanf("%d", &cli.fechadeNacimiento.mes);
 		
 		do{
 			
-			printf("\tAnio: ");
+			printf("\t Anio: ");
 			scanf("%d", &cli.fechadeNacimiento.anio);
 			
 		}while(cli.fechadeNacimiento.anio<1000);
@@ -313,10 +311,10 @@ void regiTur(){
 	
 		if(dniCliente==cli.dniCliente){
 			elCli=1;
-			printf("\n - - DATOS DEL CLIENTE - -\n ");
-			printf("\nNombre del Cliente: ");
+			printf("\n\t\t\t - - DATOS DEL CLIENTE - -\n ");
+			printf("\n\t\t\t NOMBRE: ");
 			puts(cli.AyN);
-			printf("\nDireccion: ");
+			printf("\n\t\t\t DIRECCION: ");
 			puts(cli.Domicilio);
 		
 			
@@ -354,7 +352,7 @@ void regiTur(){
 	
 	if(elCli==0)
 	{
-		printf("NO SE REGISTRO UN CLIENTE CON ESE DNI");;
+		printf("\n\t\t NO SE REGISTRO UN CLIENTE CON ESE DNI\n\n");
 	}
 	
 	
@@ -384,57 +382,63 @@ void listar(){
 	scanf("%d", &idDelProfesional);
 	
 	printf("\n INGRESE FECHA DE ATENCION: ");
-	printf("\n\n\tDIA: ");
+	printf("\n\tDIA: ");
 	scanf("%d", &dia);
-	printf("\n\n\tMES: ");
+	printf("\tMES: ");
 	scanf("%d", &mes);
 	
 	do{
 		
-		printf("\n\n\tANIO: ");
+		printf("\tANIO: ");
 		scanf("%d", &anio);
 		
 	}while(anio<1000);
 	
 	
-	rewind(TR);
+	/*rewind(TR);
 	rewind(CL);
 	rewind(RP);
-	
+	*/
 	fread(&tu, sizeof(Turnos), 1, TR);
 	while(!feof(TR)){
-		
+		//printf("\n ENTRA");
 		if(tu.borrado==true && idDelProfesional==tu.IdProfesional && tu.Fech.D==dia && tu.Fech.M==mes && tu.Fech.A==anio){
 			fread(&profe, sizeof(Profesionales), 1, RP);
-			
+			fread(&usi,sizeof(Usuarios),1,RP);
+		
 			while(!feof(RP)){
-				
+
 				if(profe.IdProfesional==idDelProfesional){
 					fread(&cli, sizeof(Clientes), 1, CL);
-					
+		
 					while(!feof(CL)){
+			
 						if(cli.dniCliente==tu.DniCliente){
 							
-							printf("\n  Nombre del Profesional: ");
+							printf("\n\t\t\t    PROFESIONAL: ");
 							puts(profe.ApellidoyNombre);
-							printf("\n  Cliente atendido en la fecha: ");
+							printf("\n\t\t\t    CLIENTE ATENDIDO: ");
 							puts(cli.AyN);
-							printf("\n  DNI: %d", cli.dniCliente);
-							printf("\n  Detalle de atencion: ");
+							printf("\n\t\t\t    DNI: %d", cli.dniCliente);
+							printf("\n\t\t\t    DETALLE DE ATENCION: ");
 							puts(tu.DetalledeAtencion);
 							
 							conta++;
 							
-							printf("\n\n ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n");
+							printf("\n\t\t\t ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 						}
 						fread(&cli,sizeof(Clientes),1,CL);
 					}
+					rewind(CL);
 				}
 				fread(&profe, sizeof(Profesionales), 1, RP);
+				fread(&usi,sizeof(Usuarios),1,RP);
 			}
+			rewind(RP);
 		}
 		fread(&tu, sizeof(Turnos), 1, TR);
 	}
+
 	
 	
 	
