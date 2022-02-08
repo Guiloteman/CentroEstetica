@@ -1,12 +1,12 @@
-/*                        Módulo Recepción:
+/*                        MÃ³dulo RecepciÃ³n:
 	
-* Este módulo satisface las necesidades del personal que recibe al cliente y 
-asiste a los Profesionales en la atención al público. Desde aquí se hace
+* Este mÃ³dulo satisface las necesidades del personal que recibe al cliente y 
+asiste a los Profesionales en la atenciÃ³n al pÃºblico. Desde aquÃ­ se hace
 ingreso de los clientes (alta de un nuevo cliente),
 
-* y la registración de los turnos (Esto solo lo realizan los recepcionistas).
+* y la registraciÃ³n de los turnos (Esto solo lo realizan los recepcionistas).
 
-* Esta aplicación debe permitir obtener un informe de los clientes atendidos en
+* Esta aplicaciÃ³n debe permitir obtener un informe de los clientes atendidos en
 determinada fecha por un determinado profesional.*/
 
 #include<stdio.h>
@@ -371,7 +371,7 @@ void regiCli(){
         }while(esta2 == false);
         
         if(esta2==true){
-			printf("\nSU CONTRASEÑA SE CREO CON EXITO...!");
+			printf("\nSU CONTRASEÃ‘A SE CREO CON EXITO...!");
 		}
         
         fwrite(&cli,sizeof(Clientes),1,CL);
