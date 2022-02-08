@@ -60,7 +60,7 @@ main(){
 	int opc;
 	system("mode con: cols=100 lines=35");
 	
-	int diaBuscar=0, mesBuscar=0, anioBuscar=0, l=0;
+	int diaBuscar=0, mesBuscar=0, anioBuscar=0, l;
 	char nomProfesional[60];
 	
 	do{
@@ -91,7 +91,7 @@ main(){
 								scanf("%d", &anioBuscar);
 								printf("\n INGRESE UN ANIO VALIDO: ");
 								
-							}while(anioBuscar>1000);
+							}while(anioBuscar<1000);
 							
 							listarTurnos(diaBuscar, mesBuscar, anioBuscar);
 						}else{
@@ -128,10 +128,27 @@ main(){
 
 void evolucionTratamiento(int diaBuscar, int mesBuscar, int anioBuscar, char nombreProfe[60]){
 	char nomyapeBus[60];
-	int edad=0;
+	int edad=0, compNom, c=0;
 	bool band;
 	
-	printf("/n/t/t FECHA DE HOY: %d/%d/%d \n", diaBuscar, mesBuscar, anioBuscar);
+	if(diaBuscar!=0 && mesBuscar!=0 && anioBuscar!=0){
+		
+		printf("\n\t\t FECHA DE HOY: %d/%d/%d \n", diaBuscar, mesBuscar, anioBuscar);
+	}else{
+		printf("\n Ingrese la fecha de hoy ");
+		printf("\n                    DIA: ");
+		scanf("%d", &diaBuscar);
+		
+		printf("\n                    MES: ");
+		scanf("%d", &mesBuscar);
+		
+		printf("\n                    ANIO: ");
+		do{
+			scanf("%d", &anioBuscar);
+			printf("\n INGRESE UN ANIO VALIDO: ");
+			
+		}while(anioBuscar<1000);
+	}
 	
 	printf("\n\t INGRESE ");
 	printf("NOMBRE Y APELLIDO DEL CLIENTE A ATENDER: ");
@@ -144,61 +161,75 @@ void evolucionTratamiento(int diaBuscar, int mesBuscar, int anioBuscar, char nom
 	fseek(archivo, 0, SEEK_SET);
 	fseek(archivo2, 0, SEEK_SET);
 	
-	fread(&cli, sizeof(Clientes), 1, archivo);
+	
 	fread(&tu, sizeof(Turnos), 1, archivo2);
 	
 	band=false;
 	
-	while(!feof(archivo) && !feof(archivo2) && band == false){
-		if(nomyapeBus == cli.AyN && tu.borrado == false){ // verifica si el cliente existe
-			//if(tu.borrado == false){ // buscar turnos activos
-				if(cli.dniCliente == tu.DniCliente){ //verifica si el cliente tiene un turno
-					if((tu.Fech.dia == diaBuscar) && (tu.Fech.mes == mesBuscar) && (tu.Fech.anio == anioBuscar)){ // verifica si el cliente tiene un turno el dia de hoy
+	
+	while(!feof(archivo2) && band == false){
+		//compNom = strcmp(nomyapeBus, cli.AyN);
+		if(tu.borrado == false && tu.Fech.dia == diaBuscar && tu.Fech.mes == mesBuscar && tu.Fech.anio == anioBuscar){ 
+			
+			fread(&cli, sizeof(Clientes), 1, archivo);
+			while(!feof(archivo)){ 
+				compNom = strcmp(nomyapeBus, cli.AyN);
+				if(compNom == 0 && cli.dniCliente == tu.DniCliente){ //verifica si el cliente tiene un turno
 						
-						printf("\n\t ================ DATOS DEL CLIENTE =================");
-						printf("\n NOMBRE Y APELLIDO: ");
-						puts(cli.AyN);
-						printf("\n\t DNI: %d", cli.dniCliente);
-						printf("\n\t DOMICILIO: ");
-						puts(cli.Domicilio);
-						
-						edad = 2022 - cli.fechadeNacimiento.anio;
-						printf("\n\t EDAD: %d", edad);
-						printf("\n\t PESO: %.2f", cli.peso);
-						
-						tu.borrado=true;
-						fseek(archivo2, (long) -sizeof(Turnos), SEEK_CUR);
-						fwrite(&tu, sizeof(Turnos), 1, archivo2);
-						
-						
-						printf("\n\n 'enter' para redactar la evolucion del tratamiento");
-						system("cls");
-						printf("\n\t -----------------------------------------------------------------");
-						printf("\n\t |                     FECHA DE ATENCION: %d/%d/%d               |", diaBuscar, mesBuscar, anioBuscar);
-						printf("\n\t                  NOMBRE DEL PROFESIONAL: ");
-						puts(nombreProfe);
-						printf("         |");
-						printf("\n\t -----------------------------------------------------------------");
-						printf("\n \tEVOLUCION DEL TRATAMIENTO: ");
-						_flushall();
-						gets(tu.DetalledeAtencion);
-						
-						tu.borrado=true;
-						fseek(archivo2, (long) -sizeof(Turnos), SEEK_CUR);
-						fwrite(&tu, sizeof(Turnos), 1, archivo2);
-						band=true;
-						
-					}
+					printf("\n\t +  +  +  +  +  +  + DATOS DEL CLIENTE +  +  +  +  +  +  +");
+					printf("\n\t\t NOMBRE Y APELLIDO: ");
+					puts(cli.AyN);
+					printf("\n\t\t DNI: %d", cli.dniCliente);
+					printf("\n\t\t DOMICILIO: ");
+					puts(cli.Domicilio);
+					
+					edad = 2022 - cli.fechadeNacimiento.anio;
+					printf("\n\t\t EDAD: %d", edad);
+					printf("\n\t\t PESO: %.2f", cli.peso);
+					
+					tu.borrado=true;
+					fseek(archivo2, (long) -sizeof(Turnos), SEEK_CUR);
+					fwrite(&tu, sizeof(Turnos), 1, archivo2);
+					
+					
+					printf("\n\n 'enter' para redactar la evolucion del tratamiento\n\n");
+					system("pause");
+					system("cls");
+					printf("\n\t -----------------------------------------------------------------\n");
+					printf("\n\t |                     FECHA DE ATENCION: %d/%d/%d               |", diaBuscar, mesBuscar, anioBuscar);
+					printf("\n\t                  NOMBRE DEL PROFESIONAL: %s                     ",nombreProfe);
+					//puts(nombreProfe);
+					printf("         |                                                                |");
+					printf("\n\t -----------------------------------------------------------------");
+					printf("\n \tEVOLUCION DEL TRATAMIENTO: ");
+					_flushall();
+					gets(tu.DetalledeAtencion);
+					
+					c++;
+					
+					tu.borrado=true;
+					fseek(archivo2, (long) -sizeof(Turnos), SEEK_CUR);
+					fwrite(&tu, sizeof(Turnos), 1, archivo2);
+					band=true;
+					
 				}else{
 					printf("\n\t El cliente no posee un turno para el dia de hoy.");
 				}
-			//}
+				fread(&cli, sizeof(Clientes), 1, archivo);
+			}
 		}else{
 			//printf("\n [ EL CLIENTE INGRESADO NO SE ENCUENTRA REGISTRADO ]");
-			fread(&cli, sizeof(Clientes), 1, archivo);
+			
 			fread(&tu, sizeof(Turnos), 1, archivo2);
 		}
 		
+	}
+	
+	if(c == 0){
+		printf("\n\t EL CLIENTE INGRESADO NO SE ENCUENTRA REGISTRADO Y/O NO SE ENCONTRO NINGUN TURNO EL DIA DE HOY");
+	}else{
+		printf("\n\n\n\t''''''''''''''''''''''''''''''''''''''''''''''''");
+		printf("\n\t         EVOLUCION DEL TRATAMIENTO REGISTRADO");
 	}
 	fclose(archivo);
 	fclose(archivo2);
@@ -227,14 +258,14 @@ void listarTurnos( int diaBuscar, int mesBuscar, int anioBuscar){
 			    
 			    while(!feof(archivo1)){
 		    		if(tu.DniCliente == cli.dniCliente){
-		    			printf("\n\n CLIENTE: ");
+		    			printf("\n\n\t\t CLIENTE: ");
 						puts(cli.AyN);
-						printf("\n DNI %d\n", tu.DniCliente);
-						printf("\n PESO: %.2f", cli.peso);
-						printf("\n EDAD: %d", 2022 - cli.fechadeNacimiento.anio);
-						printf(" FECHA DE TURNO: %d/%d/%d", tu.Fech.dia, tu.Fech.mes, tu.Fech.anio);
+						printf("\t\t DNI %d", tu.DniCliente);
+						printf("\n\t\t PESO: %.2f", cli.peso);
+						printf("\n\t\t EDAD: %d", 2022 - cli.fechadeNacimiento.anio);
+						printf("\n\t\t FECHA DE TURNO: %d/%d/%d", tu.Fech.dia, tu.Fech.mes, tu.Fech.anio);
 						contador++;
-						printf("\t------------------------------------------------\n\n");
+						printf("\n\t------------------------------------------------\n\n");
 						
 					}
 				fread(&cli,sizeof(Clientes),1,archivo1);
@@ -248,7 +279,7 @@ void listarTurnos( int diaBuscar, int mesBuscar, int anioBuscar){
 	if(contador == 0){
 		printf("\n\n\t\t NO SE REGISTRARON TURNOS EN LA FECHA");
 	}else{
-		printf("\n\n \t LISTA DE ESPERA CARGADA ");
+		printf("\n\n\t\t |  LISTA DE ESPERA CARGADA  |");
 	}
 	fclose(archivo);
 	fclose(archivo1);
@@ -258,6 +289,7 @@ int iniciarSecion(char nomProfesional[60], int b){
 	
 	int valor1, valor2;
 	char nomUsuario[10], contraUsuario[10];
+	b=0;
 	
 	printf("\n INGRESE EL NOMBRE DE USUARIO: ");
 	_flushall();
@@ -289,15 +321,17 @@ int iniciarSecion(char nomProfesional[60], int b){
 		
 		if( (valor1==0) ){
 			if(valor2==0){
-				printf("\nACCESO EXITOSO...!");
+				printf("\n\n\t\tACCESO EXITOSO...!");
 				//nomProfesional = profe.ApellidoyNombre;
 				b=1;
 			}
 		}	
 		fread(&profe, sizeof(Profesionales),1, archi);
 		fread(&usi, sizeof(Usuarios),1, archi);
-		//fread(&pass,sizeof(char),1,RL);	
+			
  	}
+ 	
+ 	fclose(archi);
  	
  	if(b == 0){
 		printf("\n\t\t*********ERROR*********");
@@ -305,9 +339,10 @@ int iniciarSecion(char nomProfesional[60], int b){
 		system("pause");
 		system("cls");
 		printf("\nINICIE NUVAMENTE LA SESION...! ");
-	 }
+	}else{
+		b=1;
+	}
 
- 	fclose(archi);
  	
  	return b;
 		
