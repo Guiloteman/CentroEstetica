@@ -222,42 +222,36 @@ void regiCli(){
 	system("cls");
     system("color f0");
 
-    int continuar= 0, i=0, longitud, longitud2, j=1;
-    int contDigitos=0, contMayus=0;
-    int contMinusc=0, contMayusc=0, contNumeros=0;
-    bool esta=false;
-	bool esta2=false;
-
-    CL= fopen("Clientes.dat", "ab");
+	int continuar;
+	
+    CL= fopen("Clientes.dat", "a+b");
 
     if(CL == NULL){
 		printf("Error al crear el archivo \n");
 		exit(EXIT_FAILURE);
 	}
     
-    printf("\t\t\tGENERE UNA CUENTA: ");
-    printf("\n\t\t\t-----------------");
     printf("\n\n\t\tINGRESE LOS DATOS PERSONALES DEL CLIENTE: ");
     printf("\n\t\t--------------------------------------------");
 
     do{
 
-        printf("\n\nINGRESE NOMBRE Y APELLIDO DEL CLIENTE: ");
+        printf("\n\n INGRESE NOMBRE Y APELLIDO DEL CLIENTE: ");
         _flushall();
         gets(cli.AyN);
         
-        printf("\n\nINGRESE DOMICILIO: ");
+        printf("\n\n INGRESE DOMICILIO: ");
         gets(cli.Domicilio);
-        printf("\n\nINGRESE NUMERO DE DNI: ");
+        printf("\n\n INGRESE NUMERO DE DNI: ");
         scanf("%d", &cli.dniCliente);
-        printf("\n\nINGRESE LOCALIDAD: ");
+        printf("\n\n INGRESE LOCALIDAD: ");
         _flushall();
         gets(cli.localidad);
         
-        printf("\nINGRESE FECHA DE NACIMIENTO: ");
+        printf("\n INGRESE FECHA DE NACIMIENTO: ");
 		printf("\n\tDia: ");
 		scanf("%d", &cli.fechadeNacimiento.dia);
-		printf("\tMes: ");
+		printf("\t Mes: ");
 		scanf("%d", &cli.fechadeNacimiento.mes);
 		
 		do{
@@ -267,121 +261,22 @@ void regiCli(){
 			
 		}while(cli.fechadeNacimiento.anio<1000);
 		
-		printf("\nINGRESE LA MASA DE SU CUERPO (Kg): ");
+		printf("\n INGRESE LA MASA DE SU CUERPO (Kg): ");
 		scanf("%f", &cli.peso);
 		
-		printf("\nINGRESE EL NUMERO DE TELEFONO: ");
+		printf("\n INGRESE EL NUMERO DE TELEFONO: ");
 		scanf("%d", &cli.tel);
         
         system("cls");
         
-        printf("\n\t\tINGRESE USUARIO Y CONTRASENA PARA SU NUEVA CREDENCIAL:");
-        printf("\n\t\t------------------------------------------------------");
-        printf("\n\nINGRESE NOMBRE DE USUARIO (minimo 6 caracteres y maximo 10 caracteres, la primera letra minuscula, al menos tres letras mayusculas y tres numeros): ");
-        
-		do{
-			_flushall();
-			gets(usi.usuario);
-			
-			longitud = strlen(usi.usuario);
-			
-			if(longitud>=6 && longitud<=10){
-			
-				for(int i=0; i<longitud; i++){
-					//printf("%c  - %d\n", cadFrase[i], cadFrase[i]);
-					
-					if(usi.usuario[0]>=97  && usi.usuario[0]<=122){		//Codigo ASCII de letras en minuscula
-			
-						if(usi.usuario[i]>=65 && usi.usuario[i]<=90){    //Codigo ASCII de letras en mayuscula
-							contMayus++;	
-									
-				       	}
-					}
-					
-				}
-				
-				for(int i=0; i<longitud; i++){
-					//if(contMayus >= 2){
-				    	if(usi.usuario[i]>=33 && usi.usuario[i]<=57){
-							contDigitos = contDigitos + 1;	
-				        }	
-					//}
-				}
-				
-				if(contDigitos < 4 && contMayus >= 2){
-					esta = true;
-				}else{
-					printf("\n VUELVA A INGRESAR OTRO NOMBRE DE USUARIO: ");
-				}
-				
-			}else{
-				printf("\n NOMBRE DE USUARIO MUY CORTO - LARGO");
-			}
-       	
-        }while(esta == false);
-        
-    	if(esta == true){
-			printf("\nSU USUARIO SE CREO CON EXITO...!");
-		}
-		
-		
-        //=========================
-        
-        printf("\n\nINGRESE CONTRASENA (debe tener entre 6 y 32 caracteres, al menos una letra mayuscula, una letra minuscula, un numero, no podra contener nigun caracter de puntuacion, ni acentos, ni espacios, no debera tener mas de 3 caracteres numericos consecutivos, ni debe tener dos caracteres consecutivos que refieran a letras alfabeticamente consecutivas ascendentemente.): ");
-        
-        do{
-        	
-        	_flushall();
-		    gets(usi.contrasena);
-	        
-	        longitud2 = strlen(usi.contrasena);
-        
-        	if(longitud2>=6 && longitud2<=32){
-		
-				for(int k=0; k<longitud2; k++){
-					//printf("%c  - %d\n", cadFrase[i], cadFrase[i]);
-					
-					if(usi.contrasena[k]>=97  && usi.contrasena[k]<=122){		//Codigo ASCII de letras en minuscula
-						contMinusc++;
-					}
-					if(usi.contrasena[k]>=65 && usi.contrasena[k]<=90){    //Codigo ASCII de letras en mayuscula
-						contMayusc++;		
-				    }
-				    if(usi.contrasena[k]>=48 && usi.contrasena[k]<=57){
-						contNumeros++;
-					}
-					if(usi.contrasena[k]!=32 && usi.contrasena[k]!=44 && usi.contrasena[k]!=46 && usi.contrasena[k]!=96 && usi.contrasena[k]!=59 && usi.contrasena[k]!=58){
-						j = 0;
-					}
-					
-				}
-			
-				if(contMinusc >=1 && contMayusc >= 1 && contNumeros >= 1 && j == 0){
-					esta2 = true;
-				}else{
-					printf("\n ERROR EN LA CONFORMACION DE LA CONTRASENA, NO CUMPLE CON LAS CONDICONES ESTABLECIDAS.");
-					printf("\n INGRESE OTRA CONTRASENA: ");
-				}
-					
-			}else{
-				printf("\n CONTRASENA MUY CORTO - LARGO\n");
-				printf("\n INGRESE OTRA CONTRASENA: ");
-			}
-        	
-        }while(esta2 == false);
-        
-        if(esta2==true){
-			printf("\nSU CONTRASEÑA SE CREO CON EXITO...!");
-		}
         
         fwrite(&cli,sizeof(Clientes),1,CL);
-        fwrite(&usi,sizeof(Usuarios),1,CL);
         
         printf("\n");
         system("pause");
         system("cls");
 
-        printf("\nDESEA CONTINUAR INGRESANDO PROFESIONALES...?\n\nPRESIONE 1 PARA SI Y 0 PARA NO: ");
+        printf("\nDESEA CONTINUAR INGRESANDO CLIENTES...?\n\n PRESIONE 1 PARA SI Y 0 PARA NO: ");
         scanf("%d", &continuar);
         system("pause");
         system("cls");
@@ -399,47 +294,72 @@ void regiTur(){
 	system("cls");
 	system("color f0");
 	
-	int conti;
+	int conti, dniCliente=0, elCli=0, opc;
 	
 	TR= fopen("Turnos.dat", "a+b");
+	CL=fopen("Clientes.dat","a+b");
 	
 	printf("************************************");
 	printf("\n*\tREGISTRAR TURNO:              *");
 	printf("\n\t---------------                 ");
 	printf("\n**********************************");
 	
-	do{
 		
-		printf("\n\nINGRESE NUMERO DE IDENTIFICACION PROFESIONAL: ");
-		scanf("%d", &tu.IdProfesional);
+	printf("\n\nINGRESE EL NUMERO DE DNI: ");
+	scanf("%d", &dniCliente);
+	
+	fread(&cli,sizeof(Clientes),1,CL);
+	while(!feof(CL) && elCli==0){
+	
+		if(dniCliente==cli.dniCliente){
+			elCli=1;
+			printf("\n - - DATOS DEL CLIENTE - -\n ");
+			printf("\nNombre del Cliente: ");
+			puts(cli.AyN);
+			printf("\nDireccion: ");
+			puts(cli.Domicilio);
 		
-		printf("\n\nESTABLEZCA LA FECHA DEL TURNO: ");
-		printf("\n\n\tDIA: ");
-		scanf("%d", &tu.Fech.D);
-		printf("\n\n\tMES: ");
-		scanf("%d", &tu.Fech.M);
-		
-		do{
 			
-			printf("\n\n\tANIO: ");
-			scanf("%d", &tu.Fech.A);
+			printf("\n\nESTABLEZCA LA FECHA PARA EL TURNO: ");
+			printf("\n\n\tDIA: ");
+			scanf("%d", &tu.Fech.D);
+			printf("\n\n\tMES: ");
+			scanf("%d", &tu.Fech.M);
 			
-		}while(tu.Fech.A<1000);
-		
-		printf("\n\nINGRESE EL NUMERO DE DNI: ");
-		scanf("%d", &tu.DniCliente);
-		
-		
-		tu.borrado = false;
-		
-		fwrite(&tu,sizeof(tu),1,TR);
-		
-		printf("\n DESEA REGISTRAR OTRO TURNO?... 1 - SI /  0 - NO");
-		scanf("%d", &conti); // conti = continuar
-		
-	}while(conti == 1);
+			do{
+				
+				printf("\n\n\tANIO: ");
+				scanf("%d", &tu.Fech.A);
+				
+			}while(tu.Fech.A<1000);
+			
+			printf("\n\nID DEL PROFESIONAL CON QUIEN SE ATENDERA: ");
+			scanf("%d", &tu.IdProfesional);
+			
+			tu.DniCliente=cli.dniCliente;
+			tu.borrado = false;
+			
+			printf("\n DESEA REGISTRAR EL TURNO? // 1 - SI | 0 - NO: ");
+			scanf("%d", &opc);
+			if(opc==1){
+				fwrite(&tu,sizeof(tu),1,TR);
+				printf("\n\t\t\t TURNO REGISTRADO \n");
+			}else{
+				printf("\n\t\t\t TURNO NO REGISTRADO \n");
+			}
+			
+		}
+		fread(&cli,sizeof(Clientes),1,CL);
+	}
+	
+	if(elCli==0)
+	{
+		printf("NO SE REGISTRO UN CLIENTE CON ESE DNI");;
+	}
+	
 	
 	fclose(TR);
+	fclose(CL);
 	getch();
 	
 }
@@ -449,20 +369,82 @@ void listar(){
 	system("cls");
 	system("color f0");
 	
-	int i=0;
+	int conta=0, dia=0, mes=0, anio=0, idDelProfesional=0;
 	
-	TR= fopen("Turnos.dat", "rb");
-	CL= fopen("Clientes.dat", "rb");
+	RP=fopen("Profesionales.dat","a+b");
+	TR=fopen("Turnos.dat","a+b");
+	CL=fopen("Clientes.dat","a+b");
 	
 	printf("\n\t\t*********************************************************************************************************");
 	printf("\n\t\t** INFORME DE CLIENTES QUE FUERON ATENDIDOS EN UNA DETERMINADA FECHA POR UN DETERMINADO PROFESIONAL     **");
 	printf("\n\t\t**--------------------------------------------------------------------------------------------------**");
 	printf("\n\t\t***********************************************************************************************************\n\n");
 	
+	printf("\n INGRESE ID DEL PROFESIONAL: ");
+	scanf("%d", &idDelProfesional);
+	
+	printf("\n INGRESE FECHA DE ATENCION: ");
+	printf("\n\n\tDIA: ");
+	scanf("%d", &dia);
+	printf("\n\n\tMES: ");
+	scanf("%d", &mes);
+	
+	do{
+		
+		printf("\n\n\tANIO: ");
+		scanf("%d", &anio);
+		
+	}while(anio<1000);
+	
+	
 	rewind(TR);
 	rewind(CL);
+	rewind(RP);
 	
 	fread(&tu, sizeof(Turnos), 1, TR);
+	while(!feof(TR)){
+		
+		if(tu.borrado==true && idDelProfesional==tu.IdProfesional && tu.Fech.D==dia && tu.Fech.M==mes && tu.Fech.A==anio){
+			fread(&profe, sizeof(Profesionales), 1, RP);
+			
+			while(!feof(RP)){
+				
+				if(profe.IdProfesional==idDelProfesional){
+					fread(&cli, sizeof(Clientes), 1, CL);
+					
+					while(!feof(CL)){
+						if(cli.dniCliente==tu.DniCliente){
+							
+							printf("\n  Nombre del Profesional: ");
+							puts(profe.ApellidoyNombre);
+							printf("\n  Cliente atendido en la fecha: ");
+							puts(cli.AyN);
+							printf("\n  DNI: %d", cli.dniCliente);
+							printf("\n  Detalle de atencion: ");
+							puts(tu.DetalledeAtencion);
+							
+							conta++;
+							
+							printf("\n\n ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n");
+						}
+						fread(&cli,sizeof(Clientes),1,CL);
+					}
+				}
+				fread(&profe, sizeof(Profesionales), 1, RP);
+			}
+		}
+		fread(&tu, sizeof(Turnos), 1, TR);
+	}
+	
+	
+	
+	if(conta==0){
+		printf("\n\t La ID no esta en el sistema / No hay atenciones en la fecha\n");
+	}else{
+		printf("\n\t\t Operacion realizada sin errores\n");
+	}
+	
+	/*fread(&tu, sizeof(Turnos), 1, TR);
 	fread(&cli, sizeof(Clientes), 1, CL);
 
 	while(!feof(CL) && !feof(TR)){
@@ -475,10 +457,11 @@ void listar(){
 
 		fread(&tu, sizeof(Turnos), 1, TR);
 		fread(&cli, sizeof(Clientes), 1, CL);
-	}
+	}*/
 	
 	fclose(TR);
 	fclose(CL);
+	fclose(RP);
 	
 	getch();
 }
