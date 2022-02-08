@@ -162,14 +162,14 @@ void evolucionTratamiento(int diaBuscar, int mesBuscar, int anioBuscar, char nom
 						printf("\n\t DOMICILIO: ");
 						puts(cli.Domicilio);
 						
-						edad = 2021 - cli.fechadeNacimiento.anio;
+						edad = 2022 - cli.fechadeNacimiento.anio;
 						printf("\n\t EDAD: %d", edad);
 						printf("\n\t PESO: %.2f", cli.peso);
 						
 						tu.borrado=true;
 						fseek(archivo2, (long) -sizeof(Turnos), SEEK_CUR);
 						fwrite(&tu, sizeof(Turnos), 1, archivo2);
-						band=true;
+						
 						
 						printf("\n\n 'enter' para redactar la evolucion del tratamiento");
 						system("cls");
@@ -183,6 +183,9 @@ void evolucionTratamiento(int diaBuscar, int mesBuscar, int anioBuscar, char nom
 						_flushall();
 						gets(tu.DetalledeAtencion);
 						
+						tu.borrado=true;
+						fseek(archivo2, (long) -sizeof(Turnos), SEEK_CUR);
+						fwrite(&tu, sizeof(Turnos), 1, archivo2);
 						band=true;
 						
 					}
@@ -204,57 +207,51 @@ void evolucionTratamiento(int diaBuscar, int mesBuscar, int anioBuscar, char nom
 
 void listarTurnos( int diaBuscar, int mesBuscar, int anioBuscar){
 	int contador=0; // variable para contar los turnos del dia
+	
 	system("cls");
 	printf("\n FECHA DE HOY: %d/%d/%d \n\n", diaBuscar, mesBuscar, anioBuscar);
 	
 	//void listarTurnos(Registro regi, int fechaBus)
-	FILE *archivo = fopen("Turnos.dat","rb");
-	fseek(archivo, 0, SEEK_SET);
+	FILE *archivo = fopen("Turnos.dat","r+b");
+	FILE *archivo1 = fopen("Clientes.dat","r+b");
+	
+	rewind(archivo);
+	
 	fread(&tu, sizeof(Turnos), 1, archivo);
 	
 	while(!feof(archivo)){
 		if(tu.borrado == false){
-			if(tu.Fech.dia == diaBuscar){
-				if(tu.Fech.mes == mesBuscar && tu.Fech.anio == anioBuscar){
-				
-					printf("\n \t\t DNI DEL CLIENTE %d\n", tu.DniCliente);
-					///================================
-					// AGREGAR INFORMACION DEL CLIENTE (ej, nombre, edad etc)(para hacer esto se debe abrir el archivo de clientes.dat)
-					// ===================================
-					
-					/*printf("\tID: ");
-					puts(regi.apeynom);
-					
-					printf("\tNRO DE FACTURA   : %d", regi.nroFactura);
-					
-					printf("\n\tIMPORTE          : $%.2f", regi.montoFactura);
-			    	
-			    	printf("\n\tTIPO DE VENTA  	 : ");
-			        	
-						if(regi.formaVenta == 1)
-							printf("CONTADO");
-			    		if(regi.formaVenta == 2)
-			   				printf("CREDITO");
-			   	
-					printf("\n\tFECHA DE VENTA 	 : %d/%d/%d", regi.fecha.dia, regi.fecha.mes, regi.fecha.anio);
-					if (regi.borrado == false){
-						printf("\n\tESTADO           : ACTIVO");
-					}else{
-						printf("\n\tESTADO           : BORRADO");
-					}*/
-					printf("\t------------------------------------------------\n\n");
-					contador++;
+			if(tu.Fech.mes == mesBuscar && tu.Fech.anio == anioBuscar && tu.Fech.dia == diaBuscar){
+				rewind(archivo1);
+			    fread(&cli,sizeof(Clientes),1,archivo1);
+			    
+			    while(!feof(archivo1)){
+		    		if(tu.DniCliente == cli.dniCliente){
+		    			printf("\n\n CLIENTE: ");
+						puts(cli.AyN);
+						printf("\n DNI %d\n", tu.DniCliente);
+						printf("\n PESO: %.2f", cli.peso);
+						printf("\n EDAD: %d", 2022 - cli.fechadeNacimiento.anio);
+						printf(" FECHA DE TURNO: %d/%d/%d", tu.Fech.dia, tu.Fech.mes, tu.Fech.anio);
+						contador++;
+						printf("\t------------------------------------------------\n\n");
+						
+					}
+				fread(&cli,sizeof(Clientes),1,archivo1);
 				}
+				
 			}
-		}
-			
+		}	
 		fread(&tu, sizeof(Turnos), 1, archivo);
 	}
 	
 	if(contador == 0){
-		printf("\n\n\t\t NO SE REGISTRARON TURNOS EL DIA DE HOY");
+		printf("\n\n\t\t NO SE REGISTRARON TURNOS EN LA FECHA");
+	}else{
+		printf("\n\n \t LISTA DE ESPERA CARGADA ");
 	}
 	fclose(archivo);
+	fclose(archivo1);
 }
 
 int iniciarSecion(char nomProfesional[60], int b){
@@ -279,22 +276,26 @@ int iniciarSecion(char nomProfesional[60], int b){
 	}
 	
 	rewind(archi);
+	
+	fread(&profe, sizeof(Profesionales), 1, archi);
 	fread(&usi, sizeof(Usuarios), 1, archi);
 	
-	valor1=strcmp(nomUsuario, usi.usuario);
-	valor2=strcmp(contraUsuario, usi.contrasena);
+	//valor1=strcmp(nomUsuario, usi.usuario);
+	//valor2=strcmp(contraUsuario, usi.contrasena);
 	
 	while(!feof(archi)){
-		//valor1=strcmp(usi.usuario, nomUsuario);
-		//valor2=strcmp(usi.contrasena, contraUsuario);
+		valor1=strcmp(usi.usuario, nomUsuario);
+		valor2=strcmp(usi.contrasena, contraUsuario);
 		
-		if( (valor2==0) ){
-			//(valor1==0) && (valor2==0)
-			printf("\nACCESO EXITOSO...!");
-			nomProfesional = profe.ApellidoyNombre;
-			b=1;	
+		if( (valor1==0) ){
+			if(valor2==0){
+				printf("\nACCESO EXITOSO...!");
+				//nomProfesional = profe.ApellidoyNombre;
+				b=1;
+			}
 		}	
-		fread(&usi,sizeof(Usuarios),1, archi);
+		fread(&profe, sizeof(Profesionales),1, archi);
+		fread(&usi, sizeof(Usuarios),1, archi);
 		//fread(&pass,sizeof(char),1,RL);	
  	}
  	
