@@ -19,6 +19,7 @@ el bono*/
 #include<stdlib.h>
 #include<string.h>
 #include<conio.h>
+#include <windows.h>
 
 struct Usuarios{
 
@@ -49,6 +50,13 @@ struct Turnos{
 	bool borrado;
 };
 
+struct RegistroDeAtenciones{
+	int IdProfesional;
+	char ApellidoyNombre[60];
+	int atenciones;
+	fecha fechadeatencion;
+};
+
 //Variables Globales.
 
 FILE *RP;
@@ -63,6 +71,7 @@ Turnos tu;
 
 //Prototipos de funciones.
 
+void gotoxy(int x, int y);
 void registProfesional();
 void regUsuarioRecepcionista();
 void atencionProfesional();
@@ -71,28 +80,23 @@ int meses();
 
 main(){
 
-    system("color 9f");
-
+	system("mode con: cols=140 lines=40");
     int opc;
-
-    printf("**********************************************************************");
-    printf("\n*\tBienvenido al Sistema del Centro de Estetica Misa            *");
-    printf("\n*\t-------------------------------------------------            *");
-    printf("\n**********************************************************************");
-    printf("\n");
 	
 	do{
-		printf("\n*****************************************************************");
-		printf("\n*                  Menu de Opciones                             *");
-		printf("\n*                  ----------------                             *");
-		printf("\n*****************************************************************");
-		printf("\n* 1. Registrar Profesional.                                     *");
-		printf("\n* 2. Registrar Usuario Recepcionista.                           *");
-		printf("\n* 3. Atenciones por Profesional.                                *");
-		printf("\n* 4. Ranking de Profesionales por Atenciones.                   *");
-		printf("\n* 5. Cerrar la aplicacion.                                      *");
-		printf("\n*****************************************************************");
-		printf("\nIngrese una opcion: ");
+		system("color b0");
+		
+		gotoxy(38,5);printf("*****************************************************************");
+		gotoxy(38,6);printf("*          M O D U L O - A D M I N I S T R A C I O N            *");
+		gotoxy(38,7);printf("*          -----------   ---------------------------            *");
+		gotoxy(38,8);printf("*****************************************************************");
+		gotoxy(38,10);printf("*       1. REGISTRAR PROFESIONAL                                *");
+		gotoxy(38,11);printf("*       2. REGISTRAR USUARIO RECEPCIONISTA                      *");
+		gotoxy(38,12);printf("*       3. ATENCIONES POR PROFESIONAL                           *");
+		gotoxy(38,13);printf("*       4. RANKING DE PROFESIONALES POR ATENCIONES              *");
+		gotoxy(38,14);printf("*       5. CERRAR LA APLICACION                                 *");
+		gotoxy(38,16);printf("*****************************************************************");
+		gotoxy(38,18);printf("  OPCION: ");
 		scanf("%d", &opc);
 		
 		switch(opc){
@@ -163,23 +167,23 @@ void registProfesional(){
 		exit(1);
 	}
     
-    printf("\t\t\tGENERE UNA CUENTA: ");
-    printf("\n\t\t\t-----------------");
-    printf("\n\n\t\tINGRESE LOS DATOS PERSONALES DEL PROFESIONAL: ");
-    printf("\n\t\t--------------------------------------------");
+    printf("\t\t\t\t\t\t  GENERE UNA CUENTA ");
+    printf("\n\t\t\t\t\t\t  -----------------");
+    printf("\n\n\t\t\t\t\tINGRESE LOS DATOS PERSONALES DEL PROFESIONAL: ");
+    printf("\n\t\t\t\t\t--------------------------------------------");
 
-    //do{
-        printf("\n\nINGRESE NOMBRE Y APELLIDO DEL PROFESIONAL: ");
+
+        printf("\n\n\t\t           NOMBRE Y APELLIDO DEL PROFESIONAL: ");
         _flushall();
 		gets(profe.ApellidoyNombre);
 
-        printf("\nINGRESE NUMERO DE MATRICULA: ");
+        printf("\n\t\t             NUMERO DE MATRICULA: ");
 		scanf("%d", &profe.IdProfesional);
 
-        printf("\nINGRESE NUMERO DE DNI: ");
+        printf("\n\t\t             NUMERO DE DNI: ");
         scanf("%d", &profe.Dni);
         
-        printf("\nINGRESE EL NUMERO DE TELEFENO: ");
+        printf("\n\t\t             NUMERO DE TELEFENO: ");
         scanf("%d", &profe.Telefono);
         
         
@@ -222,14 +226,7 @@ void registProfesional(){
 					}
 				}
 				
-				/*for(int d=0; d<longitud; d++){
-					//if(contMayus >= 2){
-				    	if(usi.usuario[d]>=33 && usi.usuario[d]<=57){
-							contDigitos = contDigitos + 1;	
-				        }	
-					//}
-				}*/
-				
+	
 				if(contDigitos < 4 && contMayus >= 2 && cont==1){
 					esta = true;
 				}else{
@@ -255,7 +252,7 @@ void registProfesional(){
         printf("\n\nINGRESE CONTRASENA (debe tener entre 6 y 32 cacteres, al menos una letra mayuscula, una letra minuscula, un numero,");
 		printf("\n                     no podra contener nigun caracter de puntuacion, ni acentos, ni espacios, no debera tener mas de 3 ");
 		printf("\n                     caracteres numericos consecutivos, ni debe tener 2 caracteres consecutivos que refieran a letras ");
-		printf("                                         alfabeticamente consecutivas ascendentemente.)");
+		printf("\n                                         alfabeticamente consecutivas ascendentemente.)");
 	    
 	    printf("\n -> ");
 	    do{
@@ -318,6 +315,7 @@ void registProfesional(){
    			printf("\n\t\t\t\t ========================================");
 			printf("\n\t\t\t\t | SU CONTRASENA SE CREO CON EXITO...!  |");
 			printf("\n\t\t\t\t ========================================");
+
 		}
 		
     	
@@ -327,20 +325,11 @@ void registProfesional(){
         fseek(RP, 2, SEEK_END);
         
         printf("\n");
-        //system("pause");
-        //system("cls");
 
-
-
-        //printf("\nDESEA CONTINUAR INGRESANDO PROFESIONALES...?\n\nPRESIONE 1 PARA SI Y 0 PARA NO: ");
-		//scanf("%d", &continuar);
 
         system("pause");
         system("cls");
 
-    //}while(continuar == 1);
-	
-	
     
     fclose(RP);
     
@@ -350,9 +339,14 @@ void registProfesional(){
 void regUsuarioRecepcionista(){
 	
 	system("cls");
-	system("color 6c");
+
+	int longitud, longitud2;
+    char aux[10];
+	int contMinusc1=0, contMayusc1=0, contNumeros1=0, contNumCons1=0, contAlfabCons1=0, j1=1; 
+	int contDigitos1=0, contMayus1=0, cont1=0;
+	bool esta=false;
+	bool esta2=false;
 	
-	int continuar= 0;
 	
 	RL= fopen("Recepcionistas.dat", "ab");
 
@@ -362,36 +356,149 @@ void regUsuarioRecepcionista(){
 		exit(EXIT_FAILURE);
 	}
 	
-	printf("*******************************");
-	printf("\n*\tREGISTRESE:           *");
-	printf("\n*\t----------            *");
-	printf("\n*******************************");
+	gotoxy(32,3);printf("*****************************************************");
+	gotoxy(32,4);printf("*          REGISTRAR USUARIO RECEPCIONISTA          *");
+	gotoxy(32,5);printf("*          --------- ------- -------------          *");
+	gotoxy(32,6);printf("*****************************************************");
 	
-	do{
-		printf("\n\nINGRESE NOMBRE Y APELLIDO: ");
+	
+		gotoxy(34,8);printf(" INGRESE ");
+		gotoxy(34,9);printf(" NOMBRE Y APELLIDO: ");
 		_flushall();
 		gets(usi.ApeyNom);
 		
-		printf("\n\nINGRESE NOMBRE DE USUARIO: ");
-		gets(usi.usuario);
+		printf("\n\n INGRESE NOMBRE DE USUARIO (minimo 6 caracteres y maximo 10 caracteres, la primera letra minuscula,");
+		printf("\n                              al menos dos letras mayusculas y tres numeros como maximo)");
+        
+        printf("\n -> ");
+       
+       	do{
+			contDigitos1=0, contMayus1=0, cont1=0;
+				
+			_flushall();
+			gets(usi.usuario);
+			
+			longitud = strlen(usi.usuario);
+			
+			if(longitud>=6 && longitud<=10){
+			
+				for(int i=0; i<longitud; i++){
+					
+					if(i==0){
+						
+						if(usi.usuario[i]>=97  && usi.usuario[i]<=122){		//Codigo ASCII de letras en minuscula
+							cont1++;
+						}
+					}else{
+						
+						if(usi.usuario[i]>=65 && usi.usuario[i]<=90){    //Codigo ASCII de letras en mayuscula
+							contMayus1++;					
+					    }
+					    
+					    if(usi.usuario[i]>=33 && usi.usuario[i]<=57){
+							contDigitos1 = contDigitos1 + 1;	
+				        }
+					}
+				}
+				
+				if(contDigitos1 < 4 && contMayus1 >= 2 && cont1==1){
+					esta = true;
+				}else{
+					printf("\n VUELVA A INGRESAR OTRO NOMBRE DE USUARIO: ");
+				}
+				
+			}else{
+				printf("\n NOMBRE DE USUARIO MUY CORTO - LARGO");
+				printf("\n  INGRESE OTRO NOMBRE DE USUARIO: ");
+			}
+			
+		}while(esta == false);
+	
+		if(esta==true){
+			printf("\n\t\t\t\t ========================================");
+			printf("\n\t\t\t\t |   SU USUARIO SE CREO CON EXITO...!   |");
+			printf("\n\t\t\t\t ========================================");
+		}
+	
+	 // =========================
+	
+	
+        printf("\n\n INGRESE CONTRASENA (debe tener entre 6 y 32 cacteres, al menos una letra mayuscula, una letra minuscula,");
+		printf("\n                     un numero, nigun caracter de puntuacion, ni acentos, ni espacios, no mas de 3 caracteres,");
+		printf("\n                     numericos consecutivos, ni debe tener 2 caracteres consecutivos que refieran a letras ");
+		printf("\n                                      alfabeticamente consecutivas ascendentemente.)");
+	    
+	    printf("\n -> ");
+	    do{
+	    	contMinusc1=0, contMayusc1=0, contNumeros1=0, contNumCons1=0, contAlfabCons1=0, j1=1; 
+	    	
+	    	_flushall();
+		    gets(usi.contrasena);
+		    
+		    strcpy(aux, usi.contrasena);
+		    strlwr(aux);
+	        
+	        longitud2 = strlen(usi.contrasena);
+        
+        	if(longitud2>=6 && longitud2<=32){
 		
-		printf("\n\nINGRESE CONTRASENA: ");
-		gets(usi.contrasena);
+				for(int k=0; k<longitud2; k++){
+					
+					if(usi.contrasena[k]>=97  && usi.contrasena[k]<=122){		//Codigo ASCII de letras en minuscula
+						contMinusc1++;
+						
+							if(aux[k] == aux[k+1] - 1){
+								contAlfabCons1++; // contador de caracteres consecutivos de letras alfabéticamente 
+							}
+					}
+					
+					if(usi.contrasena[k]>=65 && usi.contrasena[k]<=90){    //Codigo ASCII de letras en mayuscula
+						contMayusc1++;		
+				    }
+				    
+				    if(usi.contrasena[k]>=48 && usi.contrasena[k]<=57){
+						contNumeros1++;
+						
+							if(usi.contrasena[k] == usi.contrasena[k+1] - 1){
+								contNumCons1++; // contador de Numeros consecutivos
+							}
+					}
+					
+					if(usi.contrasena[k]!=32 && usi.contrasena[k]!=44 && usi.contrasena[k]!=46 && usi.contrasena[k]!=96 && usi.contrasena[k]!=59 && usi.contrasena[k]!=58){
+						j1 = 0;
+					}
+					
+				}
+			
+				if(contMinusc1 >=1 && contMayusc1 >= 1 && contNumeros1 >= 1 && j1 == 0 && contNumCons1 <= 2 && contAlfabCons1 == 0){
+					esta2 = true;
+				}else{
+					printf("\n ERROR EN LA CONFORMACION DE LA CONTRASENA, NO CUMPLE CON LAS CONDICONES ESTABLECIDAS.");
+					printf("\n  INGRESE OTRA CONTRASENA: ");
+				}
+					
+			}else{
+				printf("\n CONTRASENA MUY CORTO - LARGO");
+				printf("\n  INGRESE OTRA CONTRASENA: ");
+			}
+        
+   		}while(esta2 == false);
+   		
+   		if(esta2==true){
+   			printf("\n\t\t\t\t ========================================");
+			printf("\n\t\t\t\t | SU CONTRASENA SE CREO CON EXITO...!  |");
+			printf("\n\t\t\t\t ========================================");
+		}
 		
+        
+
 		fwrite(&usi,sizeof(Usuarios),1,RL);
 		
 		printf("\n");
-        
-        system("pause");
-        system("cls");
-
-        printf("\nDESEA CONTINUAR INGRESANDO RECEPCIONISTAS...?\n\nPRESIONE 1 PARA SI Y 0 PARA NO: ");
-		scanf("%d", &continuar);
 
         system("pause");
 		system("cls");
 
-	}while(continuar==1);
 	
 	fclose(RL);
 	
@@ -401,7 +508,7 @@ void regUsuarioRecepcionista(){
 void atencionProfesional(){
 	
 	system("cls");
-	system("color f0");
+
 	
 	int contarAtenciones=0, mesActual, idProfesional=0;
 	char apeynom[60];
@@ -412,7 +519,7 @@ void atencionProfesional(){
 	printf("\n   = INGRESE MES ACTUAL PARA MOSTRAR NRO. ATENCIONES = \n ");
 	mesActual = meses();
 	system("cls");
-	printf("\n INGRESE EL ID DEL PROFESIONAL: ");
+	gotoxy(45,8);printf(" INGRESE EL ID DEL PROFESIONAL: ");
 	scanf("%d", &idProfesional);
 	
 	printf("\n\n");
@@ -422,7 +529,6 @@ void atencionProfesional(){
 	rewind(RP);
 	
 	fread(&tu, sizeof(tu), 1, TR);
-	//fread(&profe, sizeof(profe), 1, RP);
 	
 	while(!feof(TR)){
 		
@@ -432,22 +538,12 @@ void atencionProfesional(){
 		}
 			
 		fread(&tu, sizeof(tu), 1, TR);
-		//fread(&profe, sizeof(profe), 1, RP);
 	}
 	
-	/*fread(&profe, sizeof(profe), 1, RP);
-	while(!feof(RP)){
-		
-		if(profe.IdProfesional == idProfesional){
-			printf("PROFESIONAL = %s", profe.ApellidoyNombre);
-		}
-			
-		fread(&profe, sizeof(profe), 1, RP);
-	}*/
-	
-	printf("\n\t\t ------------------------------------------------------------------");
-	printf("\n\t\t |       EL PROFESIONAL TUVO %d ATENCIONES EN EL MES ACTUAL       |",contarAtenciones);
-	printf("\n\t\t ------------------------------------------------------------------");
+
+	gotoxy(32,13);printf(" ------------------------------------------------------------------");
+	gotoxy(32,14);printf(" |       EL PROFESIONAL TUVO %d ATENCIONES EN EL MES ACTUAL        |",contarAtenciones);
+	gotoxy(32,15);printf(" ------------------------------------------------------------------");
 	
 	fclose(TR);
 	fclose(RP);
@@ -458,52 +554,87 @@ void atencionProfesional(){
 void rankingProfesionales(){
 	
 	system("cls");
-	system("color 87");
 	
 	int mayor=0, i=0;
+	int mes=0, nroderegi, nrodeatenciones, bandera;
+	RegistroDeAtenciones vectordeatenciones[50], aux; 
 	
-	TR= fopen("Turnos.dat", "rb");
-	RP= fopen("Profesionales.dat", "rb");
+	TR= fopen("Turnos.dat", "a+b");
+	RP= fopen("Profesionales.dat", "a+b");
+	
+	if(TR==NULL|| RP==NULL){
+		printf("*Error en el sistema-Archivos no cargados*"); 
+		exit(1);
+	}
 	
 	rewind(TR);
+	
+	printf("INGRESE MES: "); 
+	scanf("%d",&mes);
+	
+	/*Se almacenan los Profesionales en un vector de registro*/
+	
+	nroderegi=0;
 	rewind(RP);
-	
-	fread(&tu, sizeof(Turnos), 1, TR);
 	fread(&profe, sizeof(Profesionales), 1, RP);
+	fread(&usi, sizeof(Usuarios), 1, RP);
+	while(!feof(RP)){		
+				strcpy(vectordeatenciones[nroderegi].ApellidoyNombre, profe.ApellidoyNombre);
+				vectordeatenciones[nroderegi].IdProfesional=profe.IdProfesional;
+				vectordeatenciones[nroderegi].atenciones=0;
+				vectordeatenciones[nroderegi].fechadeatencion.M=mes;
+				nroderegi++;
+		fread(&profe, sizeof(Profesionales), 1, RP);
+		fread(&usi, sizeof(Usuarios), 1, RP);		
+	}
+
+	/*Conteo y guardado de las atenciones de cada profesional en el mes*/
 	
-	while(!feof(TR) && !feof(RP)){
-		
-		if(tu.IdProfesional==profe.IdProfesional){
-			tu.IdProfesional=i;
-			mayor=profe.ApellidoyNombre[i];		
-		}
-			
+	rewind(TR);
+   for(int i=0; i<nroderegi; i++){ 
+	    nrodeatenciones=0;
+	   	
+	   	fread(&tu, sizeof(Turnos), 1, TR);
+		while(!feof(TR)){
+	   	 	if(tu.borrado==true && tu.IdProfesional==vectordeatenciones[i].IdProfesional && mes==tu.Fech.M){
+	   	 	  	nrodeatenciones++;	 
+			}
 		fread(&tu, sizeof(Turnos), 1, TR);
-		fread(&profe, sizeof(Profesionales), 1, RP);
-		
-		break;	
-	}
+		 }
+		 rewind(TR);
+		 vectordeatenciones[i].atenciones=nrodeatenciones;
+   }
+   fclose(TR);
+   fclose(RP);
 	
-	fclose(TR);
-	fclose(RP);
 	
-	printf("\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-	printf("\n+\tRANKING DE PROFESIONALES QUE MAS ATENCIONES REALIZARON       +");
-	printf("\n+\t------------------------------------------------------       +");
-	printf("\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+	do{
+	   bandera=0;	
+	   for(int i=0; i<nroderegi-1;i++){
+		   	if(vectordeatenciones[i].atenciones<vectordeatenciones[i+1].atenciones){
+		   		aux=vectordeatenciones[i+1];
+		   		vectordeatenciones[i+1]=vectordeatenciones[i];
+		   		vectordeatenciones[i]=aux;
+		   		bandera=1;
+			}
+	   }
+   }while(bandera==1);
+   
+
+	gotoxy(31,3);printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+	gotoxy(31,4);printf("+\tRANKING DE PROFESIONALES QUE MAS ATENCIONES REALIZARON      +");
+	gotoxy(31,5);printf("+\t------------------------------------------------------      +");
+	gotoxy(31,6);printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
 	
-	RP= fopen("Profesionales.dat", "rb");
+	for(int i=0; i<nroderegi; i++){
+		printf("\n\n\t\t\t\t - - - - - - - - - -");
+   		printf("\n\t\t\t\t    PUESTO NRO. %d",i+1);
+   		printf("\n\t\t\t\t - - - - - - - - - -");
+   		printf("\n\t\t\t\tPROFESIONAL: %s", vectordeatenciones[i].ApellidoyNombre);
+   		printf("\n\t\t\t\tID: %d", vectordeatenciones[i].IdProfesional);
+   		printf("\n\t\t\t\tNRO. DE ATENCIONES EN EL MES [%d]: %d\n",mes,vectordeatenciones[i].atenciones);
+   }
 	
-	rewind(RP);
-	fread(&profe, sizeof(Profesionales), 1, RP);
-	
-	while(!feof(TR) && !feof(RP)){
-		printf("\n\n%d). %s", i+1, profe.ApellidoyNombre);
-		fread(&profe, sizeof(Profesionales), 1, RP);
-		
-		break;
-	}
-	fclose(RP);
 	
 	getch();
 }
@@ -527,4 +658,13 @@ int meses(){
 	scanf("%d", &opci);
 	
 	return opci;
+}
+
+void gotoxy(int x, int y){
+	HANDLE hcon;
+	hcon = GetStdHandle(STD_OUTPUT_HANDLE);
+	COORD dwPos;
+	dwPos.X = x;
+	dwPos.Y= y;
+	SetConsoleCursorPosition(hcon,dwPos);
 }
