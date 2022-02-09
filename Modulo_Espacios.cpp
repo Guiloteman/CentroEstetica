@@ -58,7 +58,7 @@ Profesionales profe;
 
 main(){
 	int opc;
-	system("mode con: cols=100 lines=35");
+	system("mode con: cols=140 lines=40");
 	
 	int diaBuscar=0, mesBuscar=0, anioBuscar=0, l;
 	char nomProfesional[60];
@@ -67,10 +67,12 @@ main(){
 		system("cls");
 		opc = menu();
 		system("cls");
+		system("color b0");
 		
 		switch( opc ){
 			case 1:{
-						gotoxy(30,1); printf("     *  *  * INICIE SESION CON SU CUENTA PROFESIONAL *  *  *");
+						gotoxy(32,3); printf("       *  *  * INICIE SESION CON SU CUENTA PROFESIONAL *  *  *");
+						gotoxy(32,4); printf("       -------------------------------------------------------");
 						iniciarSecion(nomProfesional, l);
 						break;
 					}
@@ -78,18 +80,19 @@ main(){
 			case 2:{
 						if(l==1){
 						
-							gotoxy(30,1); printf("     *  *  * LISTA DE ESPERA *  *  *");
-							printf("\n Ingrese la fecha de hoy ");
-							printf("\n                    DIA: ");
+							gotoxy(30,3); printf("                   *  *  * LISTA DE ESPERA *  *  *");
+							gotoxy(32,4); printf("       -------------------------------------------------------");
+							printf("\n\n\t INGRESE LA FECHA DE HOY ");
+							printf("\n\t                    DIA: ");
 							scanf("%d", &diaBuscar);
 							
-							printf("\n                    MES: ");
+							printf("\n\t                    MES: ");
 							scanf("%d", &mesBuscar);
 							
-							printf("\n                    ANIO: ");
+							printf("\n\t                    ANIO: ");
 							do{
 								scanf("%d", &anioBuscar);
-								printf("\n INGRESE UN ANIO VALIDO: ");
+								printf("\n\t INGRESE UN ANIO VALIDO: ");
 								
 							}while(anioBuscar<1000);
 							
@@ -102,7 +105,8 @@ main(){
 
 			case 3:{
 						if(l==1){
-							gotoxy(30,1); printf("     *  *  * EVOLUCION DEL TRATAMIENTO DEL CLIENTE *  *  *");
+							gotoxy(30,3); printf("        *  *  * EVOLUCION DEL TRATAMIENTO DEL CLIENTE *  *  *");
+							gotoxy(32,4); printf("       -------------------------------------------------------");
 							evolucionTratamiento(diaBuscar, mesBuscar, anioBuscar, nomProfesional);
 						}else{
 							printf("\n\t [ INICIE SECCION PARA ACCEDER A ESTA OPCION ]");
@@ -126,32 +130,34 @@ main(){
 	
 }
 
+
 void evolucionTratamiento(int diaBuscar, int mesBuscar, int anioBuscar, char nombreProfe[60]){
 	char nomyapeBus[60];
-	int edad=0, compNom, c=0;
+	int edad=0, compNom, c=0, idProfes=0;
 	bool band;
 	
 	if(diaBuscar!=0 && mesBuscar!=0 && anioBuscar!=0){
 		
-		printf("\n\t\t FECHA DE HOY: %d/%d/%d \n", diaBuscar, mesBuscar, anioBuscar);
+		printf("\n\n\t\t FECHA DE HOY: %d/%d/%d \n", diaBuscar, mesBuscar, anioBuscar);
 	}else{
-		printf("\n Ingrese la fecha de hoy ");
-		printf("\n                    DIA: ");
+		printf("\n\n\t\t INGRESE FECHA DE HOY ");
+		printf("\n\t\t                    DIA: ");
 		scanf("%d", &diaBuscar);
 		
-		printf("\n                    MES: ");
+		printf("\t\t                    MES: ");
 		scanf("%d", &mesBuscar);
 		
-		printf("\n                    ANIO: ");
 		do{
+			printf("\t\t                    ANIO: ");
 			scanf("%d", &anioBuscar);
-			printf("\n INGRESE UN ANIO VALIDO: ");
 			
 		}while(anioBuscar<1000);
 	}
 	
-	printf("\n\t INGRESE ");
-	printf("NOMBRE Y APELLIDO DEL CLIENTE A ATENDER: ");
+	printf("\n\t\t ID DEL PROFESIONAL: ");
+	scanf("%d", &idProfes);
+	
+	printf("\n\t\t NOMBRE Y APELLIDO DEL CLIENTE A ATENDER: ");
 	_flushall();
 	gets(nomyapeBus);
 	
@@ -168,7 +174,6 @@ void evolucionTratamiento(int diaBuscar, int mesBuscar, int anioBuscar, char nom
 	
 	
 	while(!feof(archivo2) && band == false){
-		//compNom = strcmp(nomyapeBus, cli.AyN);
 		if(tu.borrado == false && tu.Fech.dia == diaBuscar && tu.Fech.mes == mesBuscar && tu.Fech.anio == anioBuscar){ 
 			
 			fread(&cli, sizeof(Clientes), 1, archivo);
@@ -176,32 +181,31 @@ void evolucionTratamiento(int diaBuscar, int mesBuscar, int anioBuscar, char nom
 				compNom = strcmp(nomyapeBus, cli.AyN);
 				if(compNom == 0 && cli.dniCliente == tu.DniCliente){ //verifica si el cliente tiene un turno
 						
-					printf("\n\t +  +  +  +  +  +  + DATOS DEL CLIENTE +  +  +  +  +  +  +");
-					printf("\n\t\t NOMBRE Y APELLIDO: ");
+					printf("\n\t\t\t +  +  +  +  +  +  + DATOS DEL CLIENTE +  +  +  +  +  +  +\n");
+					printf("\n\t\t\t\t NOMBRE Y APELLIDO: ");
 					puts(cli.AyN);
-					printf("\n\t\t DNI: %d", cli.dniCliente);
-					printf("\n\t\t DOMICILIO: ");
+					printf("\n\t\t\t\t DNI: %d", cli.dniCliente);
+					printf("\n\t\t\t\t DOMICILIO: ");
 					puts(cli.Domicilio);
 					
 					edad = 2022 - cli.fechadeNacimiento.anio;
-					printf("\n\t\t EDAD: %d", edad);
-					printf("\n\t\t PESO: %.2f", cli.peso);
+					printf("\n\t\t\t\t EDAD: %d", edad);
+					printf("\n\t\t\t\t PESO: %.2f", cli.peso);
 					
 					tu.borrado=true;
 					fseek(archivo2, (long) -sizeof(Turnos), SEEK_CUR);
 					fwrite(&tu, sizeof(Turnos), 1, archivo2);
 					
 					
-					printf("\n\n 'enter' para redactar la evolucion del tratamiento\n\n");
+					printf("\n\n\t\t\t 'enter' para redactar la evolucion del tratamiento\n\n");
 					system("pause");
 					system("cls");
-					printf("\n\t -----------------------------------------------------------------\n");
-					printf("\n\t |                     FECHA DE ATENCION: %d/%d/%d               |", diaBuscar, mesBuscar, anioBuscar);
-					printf("\n\t                  NOMBRE DEL PROFESIONAL: %s                     ",nombreProfe);
-					//puts(nombreProfe);
-					printf("         |                                                                |");
-					printf("\n\t -----------------------------------------------------------------");
-					printf("\n \tEVOLUCION DEL TRATAMIENTO: ");
+					gotoxy(30,3);printf(" -----------------------------------------------------------------");
+					gotoxy(30,5);printf(" |                FECHA DE ATENCION: %d/%d/%d                    |", diaBuscar, mesBuscar, anioBuscar);
+					gotoxy(30,6);printf("                  ID DEL PROFESIONAL: %d                     ",idProfes);
+					gotoxy(30,7);printf(" |                                                               |");
+					gotoxy(30,8);printf(" -----------------------------------------------------------------");
+					gotoxy(30,10);printf("   EVOLUCION DEL TRATAMIENTO: ");
 					_flushall();
 					gets(tu.DetalledeAtencion);
 					
@@ -212,13 +216,11 @@ void evolucionTratamiento(int diaBuscar, int mesBuscar, int anioBuscar, char nom
 					fwrite(&tu, sizeof(Turnos), 1, archivo2);
 					band=true;
 					
-				}else{
-					printf("\n\t El cliente no posee un turno para el dia de hoy.");
 				}
+			
 				fread(&cli, sizeof(Clientes), 1, archivo);
 			}
 		}else{
-			//printf("\n [ EL CLIENTE INGRESADO NO SE ENCUENTRA REGISTRADO ]");
 			
 			fread(&tu, sizeof(Turnos), 1, archivo2);
 		}
@@ -226,23 +228,25 @@ void evolucionTratamiento(int diaBuscar, int mesBuscar, int anioBuscar, char nom
 	}
 	
 	if(c == 0){
-		printf("\n\t EL CLIENTE INGRESADO NO SE ENCUENTRA REGISTRADO Y/O NO SE ENCONTRO NINGUN TURNO EL DIA DE HOY");
+		gotoxy(37,18);printf(" . . . . . . . . . . . . . . . . . . . . . . . . .  ");
+		gotoxy(37,19);printf("  EL CLIENTE INGRESADO NO SE ENCUENTRA REGISTRADO");
+		gotoxy(37,20);printf("  Y/O NO SE ENCONTRO NINGUN TURNO EL DIA DE HOY");
 	}else{
-		printf("\n\n\n\t''''''''''''''''''''''''''''''''''''''''''''''''");
-		printf("\n\t         EVOLUCION DEL TRATAMIENTO REGISTRADO");
+		printf("\n\n\n\t\t\t\t    ''''''''''''''''''''''''''''''''''''''''''''''''");
+		printf("\n\t\t\t\t         EVOLUCION DEL TRATAMIENTO REGISTRADO");
 	}
 	fclose(archivo);
 	fclose(archivo2);
 	
 }
 
+
 void listarTurnos( int diaBuscar, int mesBuscar, int anioBuscar){
 	int contador=0; // variable para contar los turnos del dia
 	
 	system("cls");
 	printf("\n FECHA DE HOY: %d/%d/%d \n\n", diaBuscar, mesBuscar, anioBuscar);
-	
-	//void listarTurnos(Registro regi, int fechaBus)
+
 	FILE *archivo = fopen("Turnos.dat","r+b");
 	FILE *archivo1 = fopen("Clientes.dat","r+b");
 	
@@ -285,17 +289,18 @@ void listarTurnos( int diaBuscar, int mesBuscar, int anioBuscar){
 	fclose(archivo1);
 }
 
+
 int iniciarSecion(char nomProfesional[60], int b){
-	
+	system("color b0");
 	int valor1, valor2;
 	char nomUsuario[10], contraUsuario[10];
 	b=0;
 	
-	printf("\n INGRESE EL NOMBRE DE USUARIO: ");
+	gotoxy(38,6); printf(" INGRESE EL NOMBRE DE USUARIO: ");
 	_flushall();
 	gets(nomUsuario);
 	
-	printf("\n CONTRASENA: ");
+	gotoxy(38,8); printf(" CONTRASENA: ");
 	_flushall();
 	gets(contraUsuario);
 	
@@ -311,18 +316,15 @@ int iniciarSecion(char nomProfesional[60], int b){
 	
 	fread(&profe, sizeof(Profesionales), 1, archi);
 	fread(&usi, sizeof(Usuarios), 1, archi);
-	
-	//valor1=strcmp(nomUsuario, usi.usuario);
-	//valor2=strcmp(contraUsuario, usi.contrasena);
-	
+
 	while(!feof(archi)){
 		valor1=strcmp(usi.usuario, nomUsuario);
 		valor2=strcmp(usi.contrasena, contraUsuario);
 		
 		if( (valor1==0) ){
 			if(valor2==0){
-				printf("\n\n\t\tACCESO EXITOSO...!");
-				//nomProfesional = profe.ApellidoyNombre;
+				gotoxy(50,14); printf("ACCESO EXITOSO...!\n\n ");
+				strcpy(nomProfesional,profe.ApellidoyNombre);
 				b=1;
 			}
 		}	
@@ -334,11 +336,11 @@ int iniciarSecion(char nomProfesional[60], int b){
  	fclose(archi);
  	
  	if(b == 0){
-		printf("\n\t\t*********ERROR*********");
-		printf("\nEL USUARIO Y/O LA CONTRASENA ES INCORRECTA\n");
-		system("pause");
+		gotoxy(45,14); printf("      *********ERROR*********");
+		gotoxy(40,15);printf("EL USUARIO Y/O LA CONTRASENA ES INCORRECTA\n");
+		gotoxy(40,17);system("pause");
 		system("cls");
-		printf("\nINICIE NUVAMENTE LA SESION...! ");
+		gotoxy(42,8);printf("INICIE NUEVAMENTE LA SESION...! \n");
 	}else{
 		b=1;
 	}
@@ -348,29 +350,30 @@ int iniciarSecion(char nomProfesional[60], int b){
 		
 }
 
+
 int menu(){
 	int opcion=0;
-	printf("\033[1;35m");
-	gotoxy(30,2);printf(" ========================================================");
-	gotoxy(30,3);printf(" |          M O D U L O - E S P A C I O S               |");
-	gotoxy(30,4);printf(" ========================================================");
+	system("color b0");
+
+	gotoxy(38,5);printf(" ========================================================");
+	gotoxy(38,6);printf(" |          M O D U L O - E S P A C I O S               |");
+	gotoxy(38,7);printf(" ========================================================");
 	
-	printf("\033[0;33m");
-	gotoxy(30,6);printf(" _________________________________________________________");
-	gotoxy(30,7);printf("  1- INICIAR SESION     ");
-	gotoxy(30,8);printf(" _________________________________________________________");
-	gotoxy(30,9);printf("  2- VISUALIZAR LISTA DE ESPERA DE TURNOS (informe)     ");
-	gotoxy(30,10);printf(" ________________________________________________________");
-	gotoxy(30,11);printf("  3- REGISTRAR EVOLUCION DEL TRATAMIENTO      ");
-	gotoxy(30,12);printf(" ________________________________________________________");
-	gotoxy(30,13);printf("  4- CERRAR LA APLICACION                  ");
+	//printf("\033[0;33m");
+	gotoxy(38,9);printf(" ________________________________________________________");
+	gotoxy(38,10);printf("  1- INICIAR SESION     ");
+	gotoxy(38,11);printf(" ________________________________________________________");
+	gotoxy(38,12);printf("  2- VISUALIZAR LISTA DE ESPERA DE TURNOS (informe)     ");
+	gotoxy(38,13);printf(" ________________________________________________________");
+	gotoxy(38,14);printf("  3- REGISTRAR EVOLUCION DEL TRATAMIENTO      ");
+	gotoxy(38,15);printf(" ________________________________________________________");
+	gotoxy(38,16);printf("  4- CERRAR LA APLICACION                  ");
 
 	
-	gotoxy(44,15);printf("-----------------------");
-	gotoxy(44,16); printf("    OPCION: ");
+	gotoxy(52,18);printf("-----------------------");
+	gotoxy(52,19); printf("      OPCION: ");
 	scanf("%d", &opcion);
 	
-	printf("\033[0m");
 	return opcion;
 }
 
