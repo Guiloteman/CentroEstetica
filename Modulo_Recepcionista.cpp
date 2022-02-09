@@ -63,7 +63,8 @@ struct Turnos{
 
 //PROTOTIPOS.
 
-int iniciar(int b);
+void gotoxy(int x, int y);
+void iniciar(int &b);
 void regiCli();
 void regiTur();
 void listar();
@@ -84,29 +85,24 @@ Clientes cli;
 Turnos tu;
 
 main(){
-	
-	system("color f0");
+	system("mode con: cols=140 lines=40");
 
     int opc, l;
 
-    printf("**********************************************************************");
-    printf("\n*\tBienvenido al Sistema del Centro de Estetica Misa            *");
-    printf("\n*\t-------------------------------------------------            *");
-    printf("\n**********************************************************************");
-    printf("\n");
-	
 	do{
-		printf("\n*****************************************************************");
-		printf("\n*                  Menu de Opciones                             *");
-		printf("\n*                  ----------------                             *");
-		printf("\n*****************************************************************");
-		printf("\n* 1. Iniciar Sesion.                                            *");
-		printf("\n* 2. Registrar Cliente.                                         *");
-		printf("\n* 3. Registrar Turno.                                           *");
-		printf("\n* 4. Listado de Atenciones por Profesional y Fecha.             *");
-		printf("\n* 5. Cerrar la aplicacion.                                      *");
-		printf("\n*****************************************************************");
-		printf("\nIngrese una opcion: ");
+		system("color b0");
+		
+		gotoxy(38,5);printf("*****************************************************************");
+		gotoxy(38,6);printf("*        M O D U L O - D E L - R E C E P C I O N I S T A        *");
+		gotoxy(38,7);printf("*        -----------   -----   -------------------------        *");
+		gotoxy(38,8);printf("*****************************************************************");
+		gotoxy(38,10);printf("*       1. INICIAR SECION                                       *");
+		gotoxy(38,11);printf("*       2. REGISTRAR CLIENTE                                    *");
+		gotoxy(38,12);printf("*       3. REGISTRAR TURNO                                      *");
+		gotoxy(38,13);printf("*       4. LISTADO DE ATENCIONES POR PROFESIONAL Y FECHA        *");
+		gotoxy(38,14);printf("*       5. CERRAR LA APLICACION                                 *");
+		gotoxy(38,16);printf("*****************************************************************");
+		gotoxy(38,18);printf("  OPCION: ");
 		scanf("%d", &opc);
 		
 		printf("\n");
@@ -115,21 +111,36 @@ main(){
 
 			case 1:
 	            iniciar(l);	
+	            printf("\n\n");
 				system("PAUSE");
 				break;
 
 			case 2:
-				regiCli();
+				if(l==1){
+					regiCli();
+				}else{
+					printf("\n\t [ INICIE SECCION PARA ACCEDER A ESTA OPCION ]");
+				}
+				printf("\n\n");
 				system("PAUSE");
 				break;
 			
 			case 3:
-				regiTur();
+				if(l==1){
+					regiTur();
+				}else{
+					printf("\n\t [ INICIE SECCION PARA ACCEDER A ESTA OPCION ]");
+				}
+				printf("\n\n");
 				system("PAUSE");
 				break;
 			
 			case 4:
-				listar();
+				if(l==1){
+					listar();
+				}else{
+					printf("\n\t [ INICIE SECCION PARA ACCEDER A ESTA OPCION ]");
+				}
 				printf("\n");
 				system("PAUSE");
 				break;
@@ -154,7 +165,7 @@ main(){
 	getch();	
 }
 /*-------------------------------------------------------------------------------*/
-int iniciar(int b){
+void iniciar(int &b){
 	
 	system("cls");
 	system("color f0");
@@ -163,16 +174,17 @@ int iniciar(int b){
 	int longitud, longitud1, Pal, Pol;
 	b=0;
 	
-	printf("+++++++++++++++++++++++++++++++++++++++++++++++++++");
-	printf("\n+\t\tINICIE SESION:                    +");
-	printf("\n+\t\t-------------                     +");
-	printf("\n+++++++++++++++++++++++++++++++++++++++++++++++++++");
+	gotoxy(38,2);printf("+++++++++++++++++++++++++++++++++++++++++++++++++++");
+	gotoxy(38,3);printf("+\t\t       INICIE SESION:                   +");
+	gotoxy(38,4);printf("+\t\t       -------------                    +");
+	gotoxy(38,5);printf("+++++++++++++++++++++++++++++++++++++++++++++++++++");
 	
-	printf("\n\nINGRESE EL NOMBRE DE USUARIO: ");
+	gotoxy(37,7);printf(" INGRESE");
+	gotoxy(38,8);printf(" NOMBRE DE USUARIO: ");
 	_flushall();
     gets(name);
 	
-	printf("\n\nINGRESE LA CONTRASENA: ");
+	gotoxy(38,10);printf(" CONTRASENA: ");
 	_flushall();
 	gets(pass);
 	
@@ -194,25 +206,25 @@ int iniciar(int b){
  		
 		if( (Pal==0) && (Pol==0) ){
 			
-			printf("\nACCESO EXITOSO...!");
+			gotoxy(50,14);printf("ACCESO EXITOSO...!");
 			b=1;
 		}
 			
  		fread(&usi,sizeof(Usuarios),1,RL);
- 		//fread(&pass,sizeof(char),1,RL);	
  	}
  	
  	fclose(RL);
  	
 	if(b==0){
-		printf("\n\t\t*********ERROR*********");
-		printf("\nEL USUARIO Y/O LA CONTRASENA ES INCORRECTA\n");
-		system("pause");
+		gotoxy(45,15); printf("      *********ERROR*********");
+		gotoxy(40,16);printf("EL USUARIO Y/O LA CONTRASENA ES INCORRECTA\n");
+		gotoxy(40,18);system("pause");
 		system("cls");
-		printf("\nINICIE NUVAMENTE LA SESION...! ");
+		gotoxy(42,8);printf("INICIE NUEVAMENTE LA SESION...! \n");
+	}else{
+		b=1;
 	}
-	getch();
-	return b;	
+
 }
 /*---------------------------------------------------------------------------*/
 void regiCli(){
@@ -297,13 +309,13 @@ void regiTur(){
 	TR= fopen("Turnos.dat", "a+b");
 	CL=fopen("Clientes.dat","a+b");
 	
-	printf("************************************");
-	printf("\n*\tREGISTRAR TURNO:              *");
-	printf("\n\t---------------                 ");
-	printf("\n**********************************");
+	gotoxy(38,2);printf("************************************");
+	gotoxy(38,3);printf("*         REGISTRAR TURNO:         *");
+	gotoxy(38,4);printf("          ---------------           ");
+	gotoxy(38,5);printf("************************************");
 	
 		
-	printf("\n\nINGRESE EL NUMERO DE DNI: ");
+	gotoxy(38,7);printf(" INGRESE EL NUMERO DE DNI: ");
 	scanf("%d", &dniCliente);
 	
 	fread(&cli,sizeof(Clientes),1,CL);
@@ -311,39 +323,39 @@ void regiTur(){
 	
 		if(dniCliente==cli.dniCliente){
 			elCli=1;
-			printf("\n\t\t\t - - DATOS DEL CLIENTE - -\n ");
-			printf("\n\t\t\t NOMBRE: ");
+			gotoxy(38,9);printf("- - - DATOS DEL CLIENTE - - -");
+			gotoxy(38,10);printf(" NOMBRE: ");
 			puts(cli.AyN);
-			printf("\n\t\t\t DIRECCION: ");
+			gotoxy(38,11);printf(" DIRECCION: ");
 			puts(cli.Domicilio);
 		
 			
-			printf("\n\nESTABLEZCA LA FECHA PARA EL TURNO: ");
-			printf("\n\n\tDIA: ");
+			gotoxy(38,14);printf(" ESTABLEZCA LA FECHA PARA EL TURNO: ");
+			gotoxy(38,15);printf("DIA: ");
 			scanf("%d", &tu.Fech.D);
-			printf("\n\n\tMES: ");
+			gotoxy(38,16);printf("MES: ");
 			scanf("%d", &tu.Fech.M);
 			
 			do{
 				
-				printf("\n\n\tANIO: ");
+				gotoxy(38,17);printf("ANIO: ");
 				scanf("%d", &tu.Fech.A);
 				
 			}while(tu.Fech.A<1000);
 			
-			printf("\n\nID DEL PROFESIONAL CON QUIEN SE ATENDERA: ");
+			gotoxy(36,19);printf("ID DEL PROFESIONAL CON QUIEN SE ATENDERA: ");
 			scanf("%d", &tu.IdProfesional);
 			
 			tu.DniCliente=cli.dniCliente;
 			tu.borrado = false;
 			
-			printf("\n DESEA REGISTRAR EL TURNO? // 1 - SI | 0 - NO: ");
+			gotoxy(35,23);printf(" DESEA REGISTRAR EL TURNO? // 1 - SI | 0 - NO: ");
 			scanf("%d", &opc);
 			if(opc==1){
 				fwrite(&tu,sizeof(tu),1,TR);
-				printf("\n\t\t\t TURNO REGISTRADO \n");
+				gotoxy(44,28);printf(" TURNO REGISTRADO ");
 			}else{
-				printf("\n\t\t\t TURNO NO REGISTRADO \n");
+				gotoxy(44,28);printf(" TURNO NO REGISTRADO ");
 			}
 			
 		}
@@ -352,7 +364,7 @@ void regiTur(){
 	
 	if(elCli==0)
 	{
-		printf("\n\t\t NO SE REGISTRO UN CLIENTE CON ESE DNI\n\n");
+		gotoxy(35,14);printf(" NO SE REGISTRO UN CLIENTE CON ESE DNI");
 	}
 	
 	
@@ -394,11 +406,7 @@ void listar(){
 		
 	}while(anio<1000);
 	
-	
-	/*rewind(TR);
-	rewind(CL);
-	rewind(RP);
-	*/
+
 	fread(&tu, sizeof(Turnos), 1, TR);
 	while(!feof(TR)){
 		//printf("\n ENTRA");
@@ -447,25 +455,19 @@ void listar(){
 	}else{
 		printf("\n\t\t Operacion realizada sin errores\n");
 	}
-	
-	/*fread(&tu, sizeof(Turnos), 1, TR);
-	fread(&cli, sizeof(Clientes), 1, CL);
 
-	while(!feof(CL) && !feof(TR)){
-		
-		printf("%d). %s --> ", i+1, cli.AyN);
-		printf("\t-");
-		printf("\t%d/%d/%d ", tu.Fech.D, tu.Fech.M, tu.Fech.A);
-		printf("\t-");
-		printf("\t%d ", tu.IdProfesional);
-
-		fread(&tu, sizeof(Turnos), 1, TR);
-		fread(&cli, sizeof(Clientes), 1, CL);
-	}*/
-	
 	fclose(TR);
 	fclose(CL);
 	fclose(RP);
 	
 	getch();
+}
+
+void gotoxy(int x, int y){
+	HANDLE hcon;
+	hcon = GetStdHandle(STD_OUTPUT_HANDLE);
+	COORD dwPos;
+	dwPos.X = x;
+	dwPos.Y= y;
+	SetConsoleCursorPosition(hcon,dwPos);
 }
