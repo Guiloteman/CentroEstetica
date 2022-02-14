@@ -87,7 +87,7 @@ Turnos tu;
 main(){
 	system("mode con: cols=140 lines=40");
 
-    int opc, l;
+    int opc, l=0;
 
 	do{
 		system("color b0");
@@ -96,7 +96,7 @@ main(){
 		gotoxy(38,6);printf("*        M O D U L O - D E L - R E C E P C I O N I S T A        *");
 		gotoxy(38,7);printf("*        -----------   -----   -------------------------        *");
 		gotoxy(38,8);printf("*****************************************************************");
-		gotoxy(38,10);printf("*       1. INICIAR SECION                                       *");
+		gotoxy(38,10);printf("*       1. INICIAR SESION                                       *");
 		gotoxy(38,11);printf("*       2. REGISTRAR CLIENTE                                    *");
 		gotoxy(38,12);printf("*       3. REGISTRAR TURNO                                      *");
 		gotoxy(38,13);printf("*       4. LISTADO DE ATENCIONES POR PROFESIONAL Y FECHA        *");
@@ -208,6 +208,8 @@ void iniciar(int &b){
 			
 			gotoxy(50,14);printf("ACCESO EXITOSO...!");
 			b=1;
+		}else{
+			b=0;
 		}
 			
  		fread(&usi,sizeof(Usuarios),1,RL);
@@ -225,6 +227,7 @@ void iniciar(int &b){
 		b=1;
 	}
 
+	
 }
 /*---------------------------------------------------------------------------*/
 void regiCli(){
