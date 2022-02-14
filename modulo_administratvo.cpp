@@ -21,6 +21,8 @@ el bono*/
 #include<conio.h>
 #include <windows.h>
 
+// Declaracion de Estructuras de registros
+
 struct Usuarios{
 
     char usuario[10];
@@ -57,9 +59,9 @@ struct RegistroDeAtenciones{
 	fecha fechadeatencion;
 };
 
-//Variables Globales.
+// Declaracion de Variables Globales.
 
-FILE *RP;
+FILE *RP; // variable puntero de tipo FILE
 FILE *RL;
 FILE *TR;
 
@@ -69,7 +71,7 @@ Usuarios usi;
 Profesionales profe;
 Turnos tu;
 
-//Prototipos de funciones.
+// Prototipos de funciones.
 
 void gotoxy(int x, int y);
 void registProfesional();
@@ -300,7 +302,7 @@ void registProfesional(){
 				if(contMinusc >=1 && contMayusc >= 1 && contNumeros >= 1 && j == 0 && contNumCons <= 2 && contAlfabCons == 0){
 					esta2 = true;
 				}else{
-					printf("\n ERROR EN LA CONFORMACION DE LA CONTRASENA, NO CUMPLE CON LAS CONDICONES ESTABLECIDAS.");
+					printf("\n ERROR EN LA CONFORMACION DE LA CONTRASENA, NO CUMPLE CON LAS CONDICIONES ESTABLECIDAS.");
 					printf("\n  INGRESE OTRA CONTRASENA: ");
 				}
 					
@@ -319,8 +321,8 @@ void registProfesional(){
 		}
 		
     	
-    	fwrite(&profe,sizeof(Profesionales),1,RP);
-        fwrite(&usi,sizeof(Usuarios),1,RP);
+    	fwrite(&profe,sizeof(Profesionales),1,RP); // Graba el registro logico
+        fwrite(&usi,sizeof(Usuarios),1,RP); // Graba el registro logico
         
         fseek(RP, 2, SEEK_END);
         
@@ -348,7 +350,7 @@ void regUsuarioRecepcionista(){
 	bool esta2=false;
 	
 	
-	RL= fopen("Recepcionistas.dat", "ab");
+	RL= fopen("Recepcionistas.dat", "a+b");
 
     if(RL == NULL){
 		
@@ -575,10 +577,11 @@ void rankingProfesionales(){
 	/*Se almacenan los Profesionales en un vector de registro*/
 	
 	nroderegi=0;
+	
 	rewind(RP);
 	fread(&profe, sizeof(Profesionales), 1, RP);
 	fread(&usi, sizeof(Usuarios), 1, RP);
-	while(!feof(RP)){		
+	while(!feof(RP)){	
 				strcpy(vectordeatenciones[nroderegi].ApellidoyNombre, profe.ApellidoyNombre);
 				vectordeatenciones[nroderegi].IdProfesional=profe.IdProfesional;
 				vectordeatenciones[nroderegi].atenciones=0;
@@ -596,10 +599,11 @@ void rankingProfesionales(){
 	   	
 	   	fread(&tu, sizeof(Turnos), 1, TR);
 		while(!feof(TR)){
-	   	 	if(tu.borrado==true && tu.IdProfesional==vectordeatenciones[i].IdProfesional && mes==tu.Fech.M){
-	   	 	  	nrodeatenciones++;	 
-			}
-		fread(&tu, sizeof(Turnos), 1, TR);
+	   	 	
+				if(tu.borrado==true && tu.IdProfesional==vectordeatenciones[i].IdProfesional && mes==tu.Fech.M){
+	   	 	  		nrodeatenciones++;	 
+				}
+			fread(&tu, sizeof(Turnos), 1, TR);
 		 }
 		 rewind(TR);
 		 vectordeatenciones[i].atenciones=nrodeatenciones;
@@ -607,7 +611,7 @@ void rankingProfesionales(){
    fclose(TR);
    fclose(RP);
 	
-	
+	// Ordena los profesionales con mas atenciones
 	do{
 	   bandera=0;	
 	   for(int i=0; i<nroderegi-1;i++){
